@@ -43,7 +43,7 @@
     <Compile Include="DeliveryServices.cs" />
     <Compile Include="DeliveryServicesCollection.cs" />
     <Compile Include="Distributor.cs" />
-    <Compile Include="File.cs" />
+    <Compile Include="DistributionFile.cs" />
     <Compile Include="IDeliveryService.cs" />
     <Compile Include="IEndpoint.cs" />
     <Compile Include="IEndpointRepository.cs" />
