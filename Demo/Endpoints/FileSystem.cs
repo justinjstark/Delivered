@@ -6,6 +6,7 @@ namespace Demo.Endpoints
 {
     public class FileSystemEndpoint : IEndpoint
     {
+        public Guid Id { get; set; }
         public string Directory { get; set; }
     }
 
