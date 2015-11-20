@@ -16,8 +16,8 @@ namespace Demo.Endpoints
         {
             return new List<FileSystemEndpoint>
             {
-                new FileSystemEndpoint { Directory = "site1" },
-                new FileSystemEndpoint { Directory = "site2" }
+                new FileSystemEndpoint { Directory = @"//path1/path2" },
+                new FileSystemEndpoint { Directory = @"//dir1/dir2" }
             };
         }
     }

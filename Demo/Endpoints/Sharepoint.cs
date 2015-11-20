@@ -16,8 +16,7 @@ namespace Demo.Endpoints
         {
             return new List<SharepointEndpoint>
             {
-                new SharepointEndpoint { Uri = "site1" },
-                new SharepointEndpoint { Uri = "site2" }
+                new SharepointEndpoint { Uri = @"http://sharepoint.com" }
             };
         }
     }
@@ -31,6 +30,11 @@ namespace Demo.Endpoints
         protected override void DeliverFileToEndpoint(DistributionFile file, SharepointEndpoint endpoint)
         {
             Console.WriteLine($"Attempting to distribute file {file.FileName} to Sharepoint URI {endpoint.Uri}");
+
+            if (new Random().Next(2) == 1) //Generates a random number of 0 or 1.
+            {
+                throw new Exception($"  - ERROR distributing file { file.FileName } to Sharepoint URI { endpoint.Uri}");
+            }
         }
 
         protected override void OnSuccess(DistributionFile file, SharepointEndpoint endpoint)
@@ -40,7 +44,8 @@ namespace Demo.Endpoints
 
         protected override void OnError(Exception exception, DistributionFile file, SharepointEndpoint endpoint)
         {
-            Console.WriteLine($"  - ERROR distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
+            Console.WriteLine(exception.Message);
+            Console.WriteLine(exception.StackTrace);
         }
     }
 }
