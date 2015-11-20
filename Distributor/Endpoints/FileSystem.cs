@@ -8,11 +8,11 @@ namespace Distributor.Endpoints
         public string Directory { get; set; }
     }
 
-    public class FileSystemEndpointRepository : IEndpointRepository
+    public class FileSystemEndpointRepository : IEndpointRepository<FileSystemEndpoint>
     {
-        public IEnumerable<IEndpoint> GetEndpointsForProfile(string profileName)
+        public IEnumerable<FileSystemEndpoint> GetEndpointsForProfile(string profileName)
         {
-            return new List<IEndpoint>
+            return new List<FileSystemEndpoint>
             {
                 new FileSystemEndpoint { Directory = "site1" },
                 new FileSystemEndpoint { Directory = "site2" }
@@ -20,13 +20,15 @@ namespace Distributor.Endpoints
         }
     }
 
-    public class FileSystemDeliveryService : IDeliveryService
+    public class FileSystemDeliveryService : DeliveryService<FileSystemEndpoint>
     {
-        public void DeliverToEndpoints(File file, IEndpoint endpoint)
+        public FileSystemDeliveryService(FileSystemEndpointRepository endpointRepository) : base(endpointRepository)
         {
-            var fileSystemEndpoint = (FileSystemEndpoint) endpoint;
+        }
 
-            Console.WriteLine($"Delivering file {file.Name} to File System directory {fileSystemEndpoint.Directory}");
+        protected override void DeliverFileToEndpoint(File file, FileSystemEndpoint endpoint)
+        {
+            Console.WriteLine($"Distributing file {file.Name} to File System directory {endpoint.Directory}");
         }
     }
 }

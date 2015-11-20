@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace Distributor
 {
-    public sealed class DistributionMethodsCollection : IEnumerable<DistributionMethod>
+    public sealed class DeliveryServicesCollection : IEnumerable<IDeliveryService>
     {
-        private readonly List<DistributionMethod> _distributionMethods = new List<DistributionMethod>();
+        private readonly List<IDeliveryService> _distributionMethods = new List<IDeliveryService>();
 
-        public void Add(DistributionMethod distributor)
+        public void Add(IDeliveryService distributor)
         {
             _distributionMethods.Add(distributor);
         }
 
-        public IEnumerator<DistributionMethod> GetEnumerator()
+        public IEnumerator<IDeliveryService> GetEnumerator()
         {
             return _distributionMethods.GetEnumerator();
         }

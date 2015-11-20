@@ -8,11 +8,11 @@ namespace Distributor.Endpoints
         public string Uri { get; set; }
     }
 
-    public class SharepointEndpointRepository : IEndpointRepository
+    public class SharepointEndpointRepository : IEndpointRepository<SharepointEndpoint>
     {
-        public IEnumerable<IEndpoint> GetEndpointsForProfile(string profileName)
+        public IEnumerable<SharepointEndpoint> GetEndpointsForProfile(string profileName)
         {
-            return new List<IEndpoint>
+            return new List<SharepointEndpoint>
             {
                 new SharepointEndpoint { Uri = "site1" },
                 new SharepointEndpoint { Uri = "site2" }
@@ -20,13 +20,15 @@ namespace Distributor.Endpoints
         }
     }
 
-    public class SharepointDeliveryService : IDeliveryService
+    public class SharepointDeliveryService : DeliveryService<SharepointEndpoint>
     {
-        public void DeliverToEndpoints(File file, IEndpoint endpoint)
+        public SharepointDeliveryService(SharepointEndpointRepository endpointRepository) : base(endpointRepository)
         {
-            var sharepointEndpoint = (SharepointEndpoint)endpoint;
+        }
 
-            Console.WriteLine($"Delivering file {file.Name} to SharePoint URI {sharepointEndpoint.Uri}");
+        protected override void DeliverFileToEndpoint(File file, SharepointEndpoint endpoint)
+        {
+            Console.WriteLine($"Distributing file {file.Name} to Sharepoint URI {endpoint.Uri}");
         }
     }
 }

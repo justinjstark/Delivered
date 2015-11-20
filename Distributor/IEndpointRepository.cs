@@ -2,8 +2,8 @@
 
 namespace Distributor
 {
-    public interface IEndpointRepository
+    public interface IEndpointRepository<out TEndpoint> where TEndpoint : IEndpoint
     {
-        IEnumerable<IEndpoint> GetEndpointsForProfile(string profileName);
+        IEnumerable<TEndpoint> GetEndpointsForProfile(string profileName);
     }
 }

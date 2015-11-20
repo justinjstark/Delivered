@@ -43,9 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DistributionMethod.cs" />
-    <Compile Include="DistributionMethods.cs" />
-    <Compile Include="DistributionMethodsCollection.cs" />
+    <Compile Include="DeliveryServices.cs" />
+    <Compile Include="DeliveryServicesCollection.cs" />
     <Compile Include="Endpoints\FileSystem.cs" />
     <Compile Include="Endpoints\Sharepoint.cs" />
     <Compile Include="File.cs" />
@@ -54,7 +53,7 @@
     <Compile Include="IEndpointRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DistributionConfig.cs" />
+    <Compile Include="DeliveryServiceConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

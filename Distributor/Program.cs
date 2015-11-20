@@ -6,14 +6,14 @@ namespace Distributor
     {
         static void Main(string[] args)
         {
-            DistributionConfig.RegisterDistributionMethods(DistributionMethods.Distributions);
+            DeliveryServiceConfig.RegisterDistributionMethods(DeliveryServices.Distributions);
 
             //Run
             var file = new File {Name = "File.txt"};
 
-            foreach (var distributor in DistributionMethods.Distributions)
+            foreach (var deliveryService in DeliveryServices.Distributions)
             {
-                distributor.DeliverToEndpoints(file, "profileName");
+                deliveryService.DeliverFile(file);
             }
 
             Console.ReadLine();
