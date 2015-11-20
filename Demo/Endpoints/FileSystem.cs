@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Distributor;
 
-namespace Distributor.Endpoints
+namespace Demo.Endpoints
 {
     public class FileSystemEndpoint : IEndpoint
     {
@@ -26,9 +27,9 @@ namespace Distributor.Endpoints
         {
         }
 
-        protected override void DeliverFileToEndpoint(File file, FileSystemEndpoint endpoint)
+        protected override void DeliverFileToEndpoint(DistributionFile file, FileSystemEndpoint endpoint)
         {
-            Console.WriteLine($"Distributing file {file.Name} to File System directory {endpoint.Directory}");
+            Console.WriteLine($"Distributing file {file.FileName} to File System directory {endpoint.Directory}");
         }
     }
 }

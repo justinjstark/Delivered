@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Distributor;
 
-namespace Distributor.Endpoints
+namespace Demo.Endpoints
 {
     public class SharepointEndpoint : IEndpoint
     {
@@ -26,9 +27,9 @@ namespace Distributor.Endpoints
         {
         }
 
-        protected override void DeliverFileToEndpoint(File file, SharepointEndpoint endpoint)
+        protected override void DeliverFileToEndpoint(DistributionFile file, SharepointEndpoint endpoint)
         {
-            Console.WriteLine($"Distributing file {file.Name} to Sharepoint URI {endpoint.Uri}");
+            Console.WriteLine($"Distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
         }
     }
 }

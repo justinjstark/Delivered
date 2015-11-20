@@ -1,9 +1,9 @@
 ﻿namespace Distributor
 {
-    public class File
+    public class DistributionFile
     {
         public string ProfileName { get; set; }
-        public string Name { get; set; }
-        public byte[] Contents { get; set; }
+        public string FileName { get; set; }
+        public byte[] FileContents { get; set; }
     }
 }

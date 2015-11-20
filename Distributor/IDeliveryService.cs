@@ -6,12 +6,12 @@ namespace Distributor
 {
     public interface IDeliveryService
     {
-        void DeliverFile(File file);
+        void DeliverFile(DistributionFile file);
     }
 
     public abstract class DeliveryService<TEndpoint> : IDeliveryService where TEndpoint : IEndpoint
     {
-        protected abstract void DeliverFileToEndpoint(File file, TEndpoint endpoint);
+        protected abstract void DeliverFileToEndpoint(DistributionFile file, TEndpoint endpoint);
 
         private readonly IEndpointRepository<TEndpoint> _endpointRepository;
 
@@ -20,7 +20,7 @@ namespace Distributor
             _endpointRepository = endpointRepository;
         }
 
-        public void DeliverFile(File file)
+        public void DeliverFile(DistributionFile file)
         {
             var endpoints = _endpointRepository.GetEndpointsForProfile(file.ProfileName);
 
