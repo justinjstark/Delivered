@@ -30,12 +30,17 @@ namespace Demo.Endpoints
 
         protected override void DeliverFileToEndpoint(DistributionFile file, SharepointEndpoint endpoint)
         {
-            Console.WriteLine($"Distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
+            Console.WriteLine($"Attempting to distribute file {file.FileName} to Sharepoint URI {endpoint.Uri}");
+        }
+
+        protected override void OnSuccess(DistributionFile file, SharepointEndpoint endpoint)
+        {
+            Console.WriteLine($"  - Success distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
         }
 
         protected override void OnError(Exception exception, DistributionFile file, SharepointEndpoint endpoint)
         {
-            Console.WriteLine($"Error distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
+            Console.WriteLine($"  - ERROR distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
         }
     }
 }
