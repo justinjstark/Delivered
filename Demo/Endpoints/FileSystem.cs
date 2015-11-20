@@ -32,5 +32,10 @@ namespace Demo.Endpoints
         {
             Console.WriteLine($"Distributing file {file.FileName} to File System directory {endpoint.Directory}");
         }
+
+        protected override void OnError(Exception exception, DistributionFile file, FileSystemEndpoint endpoint)
+        {
+            Console.WriteLine($"Error distributing file {file.FileName} to File System directory {endpoint.Directory}");
+        }
     }
 }

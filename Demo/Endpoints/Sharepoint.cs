@@ -32,5 +32,10 @@ namespace Demo.Endpoints
         {
             Console.WriteLine($"Distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
         }
+
+        protected override void OnError(Exception exception, DistributionFile file, SharepointEndpoint endpoint)
+        {
+            Console.WriteLine($"Error distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
+        }
     }
 }
