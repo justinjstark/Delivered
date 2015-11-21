@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Distributor
+﻿namespace Distributor
 {
     public interface IDeliveryService
     {

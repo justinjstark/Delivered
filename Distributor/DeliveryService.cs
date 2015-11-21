@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Distributor
 {
@@ -11,19 +12,25 @@ namespace Distributor
             _endpointRepository = endpointRepository;
         }
 
-        protected abstract void DeliverFileToEndpoint(DistributionFile file, TEndpoint endpoint);
-
+        protected abstract void Deliver(Delivery<TEndpoint> delivery);
+        
         public void DeliverFile(DistributionFile file)
         {
             var endpoints = _endpointRepository.GetEndpointsForProfile(file.ProfileName);
 
             foreach (var endpoint in endpoints)
             {
+                var delivery = new Delivery<TEndpoint>
+                {
+                    File = file,
+                    Endpoint = endpoint
+                };
+
                 try
                 {
-                    DeliverFileToEndpoint(file, endpoint);
+                    Deliver(delivery);
 
-                    OnSuccess(file, endpoint);
+                    OnSuccess(delivery);
 
                     //TODO: Mark file as delivered to endpoint.
                     //Not all deliveries may be idempotent so we only ever want to deliver a file once.
@@ -31,16 +38,16 @@ namespace Distributor
                 catch (Exception exception)
                 {
                     //Call virtual OnError method and then continue to the next endpoint delivery.
-                    OnError(exception, file, endpoint);
+                    OnError(delivery, exception);
                 }
             }
         }
 
-        protected virtual void OnSuccess(DistributionFile file, TEndpoint endpoint)
+        protected virtual void OnSuccess(Delivery<TEndpoint> delivery)
         {
         }
 
-        protected virtual void OnError(Exception exception, DistributionFile file, TEndpoint endpoint)
+        protected virtual void OnError(Delivery<TEndpoint> delivery, Exception exception)
         {
         }
     }
