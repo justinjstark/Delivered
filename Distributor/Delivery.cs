@@ -15,7 +15,7 @@ namespace Distributor
 
         public bool Equals(Delivery other)
         {
-            if (other == null)
+            if ((object)other == null)
                 return false;
 
             return other.FileId == FileId && other.EndpointId == EndpointId;
