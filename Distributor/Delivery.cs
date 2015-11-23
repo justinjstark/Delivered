@@ -2,7 +2,7 @@
 
 namespace Distributor
 {
-    public class Delivery<TEndpoint> : IEquatable<Delivery<TEndpoint>> where TEndpoint : IEndpoint
+    public class Delivery : IEquatable<Delivery>
     {
         public int FileId { get; private set; }
         public Guid EndpointId { get; private set; }
@@ -13,7 +13,7 @@ namespace Distributor
             EndpointId = endpointId;
         }
 
-        public bool Equals(Delivery<TEndpoint> other)
+        public bool Equals(Delivery other)
         {
             if (other == null)
                 return false;
@@ -23,10 +23,10 @@ namespace Distributor
 
         public override bool Equals(object other)
         {
-            return Equals(other as Delivery<TEndpoint>);
+            return Equals(other as Delivery);
         }
 
-        public static bool operator ==(Delivery<TEndpoint> delivery1, Delivery<TEndpoint> delivery2)
+        public static bool operator ==(Delivery delivery1, Delivery delivery2)
         {
             if (delivery1 == null)
                 return false;
@@ -34,7 +34,7 @@ namespace Distributor
             return delivery1.Equals(delivery2);
         }
 
-        public static bool operator !=(Delivery<TEndpoint> delivery1, Delivery<TEndpoint> delivery2)
+        public static bool operator !=(Delivery delivery1, Delivery delivery2)
         {
             if (delivery1 == null)
                 return false;
