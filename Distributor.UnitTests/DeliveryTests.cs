@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using Ploeh.AutoFixture;
 using Shouldly;
 
 namespace Distributor.UnitTests
