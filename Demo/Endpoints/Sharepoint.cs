@@ -27,22 +27,22 @@ namespace Demo.Endpoints
         {
         }
 
-        protected override void Deliver(Delivery<SharepointEndpoint> delivery)
+        protected override void Deliver(DistributionFile file, SharepointEndpoint endpoint)
         {
-            Console.WriteLine($"Attempting to distribute file {delivery.File.FileName} to Sharepoint URI {delivery.Endpoint.Uri}");
+            Console.WriteLine($"Attempting to distribute file {file.FileName} to Sharepoint URI {endpoint.Uri}");
 
             if (new Random().Next(2) == 1) //Generates a random number of 0 or 1.
             {
-                throw new Exception($"  - ERROR distributing file { delivery.File.FileName } to Sharepoint URI { delivery.Endpoint.Uri}");
+                throw new Exception($"  - ERROR distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
             }
         }
 
-        protected override void OnSuccess(Delivery<SharepointEndpoint> delivery)
+        protected override void OnSuccess(DistributionFile file, SharepointEndpoint endpoint)
         {
-            Console.WriteLine($"  - Success distributing file {delivery.File.FileName} to Sharepoint URI {delivery.Endpoint.Uri}");
+            Console.WriteLine($"  - Success distributing file {file.FileName} to Sharepoint URI {endpoint.Uri}");
         }
 
-        protected override void OnError(Delivery<SharepointEndpoint> delivery, Exception exception)
+        protected override void OnError(DistributionFile file, SharepointEndpoint endpoint, Exception exception)
         {
             Console.WriteLine(exception.Message);
             Console.WriteLine(exception.StackTrace);

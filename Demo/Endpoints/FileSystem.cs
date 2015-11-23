@@ -28,19 +28,19 @@ namespace Demo.Endpoints
         {
         }
 
-        protected override void Deliver(Delivery<FileSystemEndpoint> delivery)
+        protected override void Deliver(DistributionFile file, FileSystemEndpoint endpoint)
         {
-            Console.WriteLine($"Attempting to distribute file {delivery.File.FileName} to File System directory {delivery.Endpoint.Directory}");
+            Console.WriteLine($"Attempting to distribute file {file.FileName} to File System directory {endpoint.Directory}");
         }
 
-        protected override void OnSuccess(Delivery<FileSystemEndpoint> delivery)
+        protected override void OnSuccess(DistributionFile file, FileSystemEndpoint endpoint)
         {
-            Console.WriteLine($"  - Success distributing file {delivery.File.FileName} to File System directory {delivery.Endpoint.Directory}");
+            Console.WriteLine($"  - Success distributing file {file.FileName} to File System directory {endpoint.Directory}");
         }
         
-        protected override void OnError(Delivery<FileSystemEndpoint> delivery, Exception exception)
+        protected override void OnError(DistributionFile file, FileSystemEndpoint endpoint, Exception exception)
         {
-            Console.WriteLine($"  - ERROR distributing file {delivery.File.FileName} to File System directory {delivery.Endpoint.Directory}");
+            Console.WriteLine($"  - ERROR distributing file {file.FileName} to File System directory {endpoint.Directory}");
         }
     }
 }
