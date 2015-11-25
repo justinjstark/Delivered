@@ -4,11 +4,15 @@ namespace Distributor
 {
     public class Delivery : IEquatable<Delivery>
     {
+        public Guid Id { get; private set; }
         public Guid DistributableId { get; private set; }
         public Guid EndpointId { get; private set; }
 
+        private Delivery() { }
+
         public Delivery(Guid distributableId, Guid endpointId)
         {
+            Id = new Guid();
             DistributableId = distributableId;
             EndpointId = endpointId;
         }

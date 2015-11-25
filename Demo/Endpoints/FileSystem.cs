@@ -24,7 +24,7 @@ namespace Demo.Endpoints
 
     public class FileSystemDeliveryService : EndpointDeliveryService<DistributableFile, FileSystemEndpoint>
     {
-        public FileSystemDeliveryService(FileSystemEndpointRepository endpointRepository) : base(endpointRepository)
+        public FileSystemDeliveryService() : base(new FileSystemEndpointRepository())
         {
         }
 

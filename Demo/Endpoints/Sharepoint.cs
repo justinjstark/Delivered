@@ -23,7 +23,7 @@ namespace Demo.Endpoints
 
     public class SharepointDeliveryService : EndpointDeliveryService<DistributableFile, SharepointEndpoint>
     {
-        public SharepointDeliveryService(SharepointEndpointRepository endpointRepository) : base(endpointRepository)
+        public SharepointDeliveryService() : base(new SharepointEndpointRepository())
         {
         }
 

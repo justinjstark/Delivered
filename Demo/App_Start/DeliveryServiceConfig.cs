@@ -8,8 +8,8 @@ namespace Demo
         public static void RegisterDeliveryServices(EndpointDeliveryServicesCollection endpointDeliveryServices)
         {
             //Add delivery services here.
-            endpointDeliveryServices.Add(new SharepointDeliveryService(new SharepointEndpointRepository()));
-            endpointDeliveryServices.Add(new FileSystemDeliveryService(new FileSystemEndpointRepository()));
+            endpointDeliveryServices.Add(new SharepointDeliveryService());
+            endpointDeliveryServices.Add(new FileSystemDeliveryService());
         }
     }
 }

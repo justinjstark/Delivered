@@ -45,6 +45,7 @@
     <Compile Include="EndpointDeliveryServices.cs" />
     <Compile Include="EndpointDeliveryServicesCollection.cs" />
     <Compile Include="Distributor.cs" />
+    <Compile Include="IDeliveryRepository.cs" />
     <Compile Include="IDistributable.cs" />
     <Compile Include="IEndpointDeliveryService.cs" />
     <Compile Include="IEndpoint.cs" />
