@@ -2,6 +2,6 @@
 {
     public interface IEndpointDeliveryService
     {
-        void DeliverFile(DistributionFile file);
+        void Deliver(IDistributable distributable);
     }
 }

@@ -1,14 +1,17 @@
-﻿namespace Distributor
-{
-    public class Distributor
-    {
-        public void Run()
-        {
-            var file = new DistributionFile { FileName = "File.txt" };
+﻿using System.Collections.Generic;
 
-            foreach (var endpointDeliveryService in EndpointDeliveryServices.DeliveryServices)
+namespace Distributor
+{
+    public class Distributor<TDistributable> where TDistributable : IDistributable
+    {
+        public void Distribute(IEnumerable<TDistributable> distributables)
+        {
+            foreach (var distributable in distributables)
             {
-                endpointDeliveryService.DeliverFile(file);
+                foreach (var endpointDeliveryService in EndpointDeliveryServices.DeliveryServices)
+                {
+                    endpointDeliveryService.Deliver(distributable);
+                }
             }
         }
     }

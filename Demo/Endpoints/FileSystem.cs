@@ -22,25 +22,25 @@ namespace Demo.Endpoints
         }
     }
 
-    public class FileSystemDeliveryService : EndpointDeliveryService<FileSystemEndpoint>
+    public class FileSystemDeliveryService : EndpointDeliveryService<DistributableFile, FileSystemEndpoint>
     {
         public FileSystemDeliveryService(FileSystemEndpointRepository endpointRepository) : base(endpointRepository)
         {
         }
 
-        protected override void Deliver(DistributionFile file, FileSystemEndpoint endpoint)
+        protected override void DeliverToEndpoint(DistributableFile file, FileSystemEndpoint endpoint)
         {
-            Console.WriteLine($"Attempting to distribute file {file.FileName} to File System directory {endpoint.Directory}");
+            Console.WriteLine($"Attempting to distribute file {file.Name} to File System directory {endpoint.Directory}");
         }
 
-        protected override void OnSuccess(DistributionFile file, FileSystemEndpoint endpoint)
+        protected override void OnSuccess(DistributableFile file, FileSystemEndpoint endpoint)
         {
-            Console.WriteLine($"  - Success distributing file {file.FileName} to File System directory {endpoint.Directory}");
+            Console.WriteLine($"  - Success distributing file {file.Name} to File System directory {endpoint.Directory}");
         }
         
-        protected override void OnError(DistributionFile file, FileSystemEndpoint endpoint, Exception exception)
+        protected override void OnError(DistributableFile file, FileSystemEndpoint endpoint, Exception exception)
         {
-            Console.WriteLine($"  - ERROR distributing file {file.FileName} to File System directory {endpoint.Directory}");
+            Console.WriteLine($"  - ERROR distributing file {file.Name} to File System directory {endpoint.Directory}");
         }
     }
 }

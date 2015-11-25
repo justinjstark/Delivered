@@ -10,26 +10,41 @@ namespace Distributor.UnitTests
         [Test]
         public void Deliveries_With_Same_Ids_Should_Be_Equal()
         {
-            var delivery1 = new Delivery(1, new Guid("2194D9BD-F963-45BD-ACF4-8D071772EE8A"));
-            var delivery2 = new Delivery(1, new Guid("2194D9BD-F963-45BD-ACF4-8D071772EE8A"));
+            var delivery1DistributableId = Guid.NewGuid();
+            var delivery1EndpointId = Guid.NewGuid();
+            var delivery1 = new Delivery(delivery1DistributableId, delivery1EndpointId);
+
+            var delivery2DistributableId = new Guid(delivery1DistributableId.ToString()); //Clone
+            var delivery2EndpointId = new Guid(delivery1EndpointId.ToString()); //Clone
+            var delivery2 = new Delivery(delivery2DistributableId, delivery2EndpointId);
 
             delivery1.ShouldBe(delivery2);
         }
-
+        
         [Test]
-        public void Deliveries_With_Different_File_Ids_Should_Not_Be_Equal()
+        public void Deliveries_With_Different_Distributable_Ids_Should_Not_Be_Equal()
         {
-            var delivery1 = new Delivery(1, new Guid("10B94340-5F75-4C26-954A-9F45CBC34951"));
-            var delivery2 = new Delivery(2, new Guid("10B94340-5F75-4C26-954A-9F45CBC34951"));
+            var delivery1DistributableId = Guid.NewGuid();
+            var delivery1EndpointId = Guid.NewGuid();
+            var delivery1 = new Delivery(delivery1DistributableId, delivery1EndpointId);
+
+            var delivery2DistributableId = Guid.NewGuid();
+            var delivery2EndpointId = new Guid(delivery1EndpointId.ToString()); //Clone
+            var delivery2 = new Delivery(delivery2DistributableId, delivery2EndpointId);
 
             delivery1.ShouldNotBe(delivery2);
         }
-
+        
         [Test]
         public void Deliveries_With_Different_Endpoint_Ids_Should_Not_Be_Equal()
         {
-            var delivery1 = new Delivery(1, new Guid("044CA5BD-8443-4666-8B26-406C82A6A651"));
-            var delivery2 = new Delivery(1, new Guid("4424CF6E-2414-4340-ACED-32C20A07BFFB"));
+            var delivery1DistributableId = Guid.NewGuid();
+            var delivery1EndpointId = Guid.NewGuid();
+            var delivery1 = new Delivery(delivery1DistributableId, delivery1EndpointId);
+
+            var delivery2DistributableId = new Guid(delivery1DistributableId.ToString()); //Clone
+            var delivery2EndpointId = Guid.NewGuid();
+            var delivery2 = new Delivery(delivery2DistributableId, delivery2EndpointId);
 
             delivery1.ShouldNotBe(delivery2);
         }
@@ -37,8 +52,8 @@ namespace Distributor.UnitTests
         [Test]
         public void Deliveries_With_Different_Ids_Should_Not_Be_Equal()
         {
-            var delivery1 = new Delivery(1, new Guid("FF52AFC2-7815-4C90-A853-1BD2FFE913AC"));
-            var delivery2 = new Delivery(2, new Guid("4708DA8C-0BA3-40DA-9B79-1CE5446A3E57"));
+            var delivery1 = new Delivery(Guid.NewGuid(), Guid.NewGuid());
+            var delivery2 = new Delivery(Guid.NewGuid(), Guid.NewGuid());
 
             delivery1.ShouldNotBe(delivery2);
         }
