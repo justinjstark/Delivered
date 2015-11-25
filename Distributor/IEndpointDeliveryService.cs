@@ -1,6 +1,6 @@
 ﻿namespace Distributor
 {
-    public interface IDeliveryService
+    public interface IEndpointDeliveryService
     {
         void DeliverFile(DistributionFile file);
     }

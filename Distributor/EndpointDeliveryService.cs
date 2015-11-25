@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Linq;
 
 namespace Distributor
 {
-    public abstract class DeliveryService<TEndpoint> : IDeliveryService where TEndpoint : IEndpoint
+    public abstract class EndpointDeliveryService<TEndpoint> : IEndpointDeliveryService where TEndpoint : IEndpoint
     {
         private readonly IEndpointRepository<TEndpoint> _endpointRepository;
         
-        protected DeliveryService(IEndpointRepository<TEndpoint> endpointRepository)
+        protected EndpointDeliveryService(IEndpointRepository<TEndpoint> endpointRepository)
         {
             _endpointRepository = endpointRepository;
         }

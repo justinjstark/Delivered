@@ -21,7 +21,7 @@ namespace Demo.Endpoints
         }
     }
 
-    public class SharepointDeliveryService : DeliveryService<SharepointEndpoint>
+    public class SharepointDeliveryService : EndpointDeliveryService<SharepointEndpoint>
     {
         public SharepointDeliveryService(SharepointEndpointRepository endpointRepository) : base(endpointRepository)
         {

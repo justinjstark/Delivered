@@ -22,7 +22,7 @@ namespace Demo.Endpoints
         }
     }
 
-    public class FileSystemDeliveryService : DeliveryService<FileSystemEndpoint>
+    public class FileSystemDeliveryService : EndpointDeliveryService<FileSystemEndpoint>
     {
         public FileSystemDeliveryService(FileSystemEndpointRepository endpointRepository) : base(endpointRepository)
         {

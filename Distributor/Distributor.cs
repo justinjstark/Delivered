@@ -6,9 +6,9 @@
         {
             var file = new DistributionFile { FileName = "File.txt" };
 
-            foreach (var deliveryService in DeliveryServices.Distributions)
+            foreach (var endpointDeliveryService in EndpointDeliveryServices.DeliveryServices)
             {
-                deliveryService.DeliverFile(file);
+                endpointDeliveryService.DeliverFile(file);
             }
         }
     }

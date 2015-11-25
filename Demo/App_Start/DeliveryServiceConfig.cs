@@ -5,11 +5,11 @@ namespace Demo
 {
     public static class DeliveryServiceConfig
     {
-        public static void RegisterDeliveryServices(DeliveryServicesCollection deliveryServices)
+        public static void RegisterDeliveryServices(EndpointDeliveryServicesCollection endpointDeliveryServices)
         {
             //Add delivery services here.
-            deliveryServices.Add(new SharepointDeliveryService(new SharepointEndpointRepository()));
-            deliveryServices.Add(new FileSystemDeliveryService(new FileSystemEndpointRepository()));
+            endpointDeliveryServices.Add(new SharepointDeliveryService(new SharepointEndpointRepository()));
+            endpointDeliveryServices.Add(new FileSystemDeliveryService(new FileSystemEndpointRepository()));
         }
     }
 }

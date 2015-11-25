@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace Distributor
 {
-    public sealed class DeliveryServicesCollection : IEnumerable<IDeliveryService>
+    public sealed class EndpointDeliveryServicesCollection : IEnumerable<IEndpointDeliveryService>
     {
-        private readonly List<IDeliveryService> _distributionMethods = new List<IDeliveryService>();
+        private readonly List<IEndpointDeliveryService> _endpointDeliveryServices = new List<IEndpointDeliveryService>();
 
-        public void Add(IDeliveryService distributor)
+        public void Add(IEndpointDeliveryService endpointDeliveryService)
         {
-            _distributionMethods.Add(distributor);
+            _endpointDeliveryServices.Add(endpointDeliveryService);
         }
 
-        public IEnumerator<IDeliveryService> GetEnumerator()
+        public IEnumerator<IEndpointDeliveryService> GetEnumerator()
         {
-            return _distributionMethods.GetEnumerator();
+            return _endpointDeliveryServices.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
