@@ -42,9 +42,8 @@
   <ItemGroup>
     <Compile Include="Delivery.cs" />
     <Compile Include="EndpointDeliveryService.cs" />
-    <Compile Include="EndpointDeliveryServices.cs" />
-    <Compile Include="EndpointDeliveryServicesCollection.cs" />
     <Compile Include="Distributor.cs" />
+    <Compile Include="EndpointDeliveryServicesCollection.cs" />
     <Compile Include="IDeliveryRepository.cs" />
     <Compile Include="IDistributable.cs" />
     <Compile Include="IEndpointDeliveryService.cs" />

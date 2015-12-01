@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\DeliveryServiceConfig.cs" />
     <Compile Include="DistributableFile.cs" />
     <Compile Include="Endpoints\FileSystem.cs" />
     <Compile Include="Endpoints\Sharepoint.cs" />

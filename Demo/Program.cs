@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Demo.Endpoints;
 using Distributor;
 
 namespace Demo
@@ -8,9 +9,6 @@ namespace Demo
     {
         private static void Main(string[] args)
         {
-            //Register the Delivery Service for each Endpoint
-            DeliveryServiceConfig.RegisterDeliveryServices(EndpointDeliveryServices.DeliveryServices);
-
             var distributables = new List<DistributableFile>
             {
                 new DistributableFile
@@ -22,8 +20,12 @@ namespace Demo
                 }
             };
 
-            //Run the Distributor
+            //Configure the distributor
             var distributor = new Distributor<DistributableFile>();
+            distributor.EndpointDeliveryServices.Add(new SharepointDeliveryService());
+            distributor.EndpointDeliveryServices.Add(new FileSystemDeliveryService());
+
+            //Run the Distributor
             distributor.Distribute(distributables);
 
             Console.ReadLine();
