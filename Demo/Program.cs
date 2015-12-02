@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Demo.Endpoints;
+using Demo.Endpoints.FileSystem;
+using Demo.Endpoints.Sharepoint;
 using Distributor;
 
 namespace Demo
