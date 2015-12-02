@@ -43,8 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DistributableFile.cs" />
-    <Compile Include="Endpoints\FileSystem.cs" />
-    <Compile Include="Endpoints\Sharepoint.cs" />
+    <Compile Include="Endpoints\FileSystem\FileSystemDeliveryService.cs" />
+    <Compile Include="Endpoints\FileSystem\FileSystemEndpoint.cs" />
+    <Compile Include="Endpoints\FileSystem\FileSystemEndpointRepository.cs" />
+    <Compile Include="Endpoints\Sharepoint\SharepointDeliveryService.cs" />
+    <Compile Include="Endpoints\Sharepoint\SharepointEndpoint.cs" />
+    <Compile Include="Endpoints\Sharepoint\SharepointEndpointRepository.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

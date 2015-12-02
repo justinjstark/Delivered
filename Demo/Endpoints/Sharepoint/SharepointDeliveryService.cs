@@ -1,26 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Distributor;
 
-namespace Demo.Endpoints
+namespace Demo.Endpoints.Sharepoint
 {
-    public class SharepointEndpoint : IEndpoint
-    {
-        public Guid Id { get; set; }
-        public string Uri { get; set; }
-    }
-
-    public class SharepointEndpointRepository : IEndpointRepository<SharepointEndpoint>
-    {
-        public IEnumerable<SharepointEndpoint> GetEndpointsForProfile(string profileName)
-        {
-            return new List<SharepointEndpoint>
-            {
-                new SharepointEndpoint { Uri = @"http://sharepoint.com" }
-            };
-        }
-    }
-
     public class SharepointDeliveryService : EndpointDeliveryService<DistributableFile, SharepointEndpoint>
     {
         public SharepointDeliveryService() : base(new SharepointEndpointRepository())
