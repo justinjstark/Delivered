@@ -5,7 +5,7 @@ namespace Demo.Endpoints.Sharepoint
 {
     public class SharepointEndpointRepository : IEndpointRepository<SharepointEndpoint>
     {
-        public IEnumerable<SharepointEndpoint> GetEndpointsForProfile(string profileName)
+        public IEnumerable<SharepointEndpoint> GetEndpointsForRecipient(string recipientName)
         {
             return new List<SharepointEndpoint>
             {

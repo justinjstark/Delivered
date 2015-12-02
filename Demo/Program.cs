@@ -15,7 +15,7 @@ namespace Demo
                 new DistributableFile
                 {
                     Id = Guid.NewGuid(),
-                    ProfileName = "TestProfile",
+                    RecipientName = "TestRecipient",
                     Name = "test.pdf",
                     Contents = null
                 }
