@@ -5,7 +5,7 @@ namespace Demo.Endpoints.FileSystem
 {
     public class FileSystemEndpointRepository : IEndpointRepository<FileSystemEndpoint>
     {
-        public IEnumerable<FileSystemEndpoint> GetEndpointsForProfile(string profileName)
+        public IEnumerable<FileSystemEndpoint> GetEndpointsForRecipient(string recipientName)
         {
             return new List<FileSystemEndpoint>
             {

@@ -23,7 +23,7 @@ namespace Distributor
         
         public void Deliver(IDistributable distributable)
         {
-            var endpoints = _endpointRepository.GetEndpointsForProfile(distributable.ProfileName);
+            var endpoints = _endpointRepository.GetEndpointsForRecipient(distributable.RecipientName);
 
             foreach (var endpoint in endpoints)
             {
