@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Distributor
+namespace Verdeler
 {
     public sealed class EndpointDeliveryServicesCollection : IEnumerable<IEndpointDeliveryService>
     {

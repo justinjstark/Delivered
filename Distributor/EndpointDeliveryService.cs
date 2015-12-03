@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Distributor
+namespace Verdeler
 {
     public abstract class EndpointDeliveryService<TDistributable, TEndpoint> : IEndpointDeliveryService
         where TDistributable : IDistributable

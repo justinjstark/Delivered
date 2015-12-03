@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Distributor
+namespace Verdeler
 {
     public interface IDeliveryRepository
     {

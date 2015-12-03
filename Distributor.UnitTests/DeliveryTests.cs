@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Shouldly;
 
-namespace Distributor.UnitTests
+namespace Verdeler.UnitTests
 {
     [TestFixture]
     public class DeliveryTests

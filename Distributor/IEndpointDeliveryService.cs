@@ -1,4 +1,4 @@
-﻿namespace Distributor
+﻿namespace Verdeler
 {
     public interface IEndpointDeliveryService
     {

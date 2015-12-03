@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Distributor
+namespace Verdeler
 {
     public class Delivery : IEquatable<Delivery>
     {

@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo.csproj", "{B3E3EF43-4203-4B56-9816-5BEA5CAE66BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Distributor", "Distributor\Distributor.csproj", "{1F08B68B-C4DF-43A7-BC13-83BCC0AFCE12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verdeler", "Distributor\Verdeler.csproj", "{1F08B68B-C4DF-43A7-BC13-83BCC0AFCE12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Distributor.UnitTests", "Distributor.UnitTests\Distributor.UnitTests.csproj", "{F9AC5556-C753-4578-82DE-FB64CB1A0EFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verdeler.UnitTests", "Distributor.UnitTests\Verdeler.UnitTests.csproj", "{F9AC5556-C753-4578-82DE-FB64CB1A0EFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

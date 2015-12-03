@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Distributor
+namespace Verdeler
 {
     public class Distributor<TDistributable> where TDistributable : IDistributable
     {
