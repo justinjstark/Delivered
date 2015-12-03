@@ -56,7 +56,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Distributor\Verdeler.csproj">
+    <ProjectReference Include="..\Verdeler\Verdeler.csproj">
       <Project>{1f08b68b-c4df-43a7-bc13-83bcc0afce12}</Project>
       <Name>Verdeler</Name>
     </ProjectReference>
