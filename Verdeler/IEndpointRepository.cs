@@ -2,7 +2,7 @@
 
 namespace Verdeler
 {
-    public interface IEndpointRepository<out TEndpoint> where TEndpoint : IEndpoint
+    public interface IEndpointRepository<out TEndpoint> where TEndpoint : Endpoint
     {
         IEnumerable<TEndpoint> GetEndpointsForRecipient(string recipientName);
     }

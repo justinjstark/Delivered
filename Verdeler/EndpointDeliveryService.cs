@@ -4,7 +4,7 @@ namespace Verdeler
 {
     public abstract class EndpointDeliveryService<TDistributable, TEndpoint> : IEndpointDeliveryService
         where TDistributable : IDistributable
-        where TEndpoint : IEndpoint
+        where TEndpoint : Endpoint
     {
         private readonly IEndpointRepository<TEndpoint> _endpointRepository;
         private IDeliveryRepository _deliveryRepository;

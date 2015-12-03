@@ -47,7 +47,7 @@
     <Compile Include="IDeliveryRepository.cs" />
     <Compile Include="IDistributable.cs" />
     <Compile Include="IEndpointDeliveryService.cs" />
-    <Compile Include="IEndpoint.cs" />
+    <Compile Include="Endpoint.cs" />
     <Compile Include="IEndpointRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
