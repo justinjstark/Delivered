@@ -10,7 +10,23 @@ namespace Demo
     {
         private static void Main(string[] args)
         {
-            var distributables = new List<DistributableFile>
+            //Configure the distributor
+            var distributor = new Distributor<DistributableFile>();
+            distributor.EndpointDeliveryServices.Add(new SharepointDeliveryService());
+            distributor.EndpointDeliveryServices.Add(new FileSystemDeliveryService());
+
+            //Distribute all files
+            foreach (var distributableFile in GetDistributableFiles())
+            {
+                distributor.Distribute(distributableFile);
+            }
+
+            Console.ReadLine();
+        }
+
+        private static IEnumerable<DistributableFile> GetDistributableFiles()
+        {
+            var distributableFiles = new List<DistributableFile>
             {
                 new DistributableFile
                 {
@@ -21,15 +37,7 @@ namespace Demo
                 }
             };
 
-            //Configure the distributor
-            var distributor = new Distributor<DistributableFile>();
-            distributor.EndpointDeliveryServices.Add(new SharepointDeliveryService());
-            distributor.EndpointDeliveryServices.Add(new FileSystemDeliveryService());
-
-            //Run the Distributor
-            distributor.Distribute(distributables);
-
-            Console.ReadLine();
+            return distributableFiles;
         }
     }
 }
