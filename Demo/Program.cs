@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Demo.Endpoints.FileSystem;
 using Demo.Endpoints.Sharepoint;
-using Distributor;
+using Verdeler;
 
 namespace Demo
 {

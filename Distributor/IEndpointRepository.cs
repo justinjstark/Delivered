@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Distributor
+namespace Verdeler
 {
     public interface IEndpointRepository<out TEndpoint> where TEndpoint : IEndpoint
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{1F08B68B-C4DF-43A7-BC13-83BCC0AFCE12}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Distributor</RootNamespace>
-    <AssemblyName>Distributor</AssemblyName>
+    <RootNamespace>Verdeler</RootNamespace>
+    <AssemblyName>Verdeler</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
