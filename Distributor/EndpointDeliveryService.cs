@@ -7,7 +7,6 @@ namespace Distributor
         where TEndpoint : IEndpoint
     {
         private readonly IEndpointRepository<TEndpoint> _endpointRepository;
-        private IDeliveryRepository _deliveryRepository;
         
         protected EndpointDeliveryService(IEndpointRepository<TEndpoint> endpointRepository)
         {
@@ -15,11 +14,6 @@ namespace Distributor
         }
 
         protected abstract void DeliverToEndpoint(TDistributable distributable, TEndpoint endpoint);
-
-        public void UseDeliveryRepository(IDeliveryRepository deliveryRepository)
-        {
-            _deliveryRepository = deliveryRepository;
-        }
         
         public void Deliver(IDistributable distributable)
         {
@@ -30,8 +24,6 @@ namespace Distributor
                 try
                 {
                     DeliverToEndpoint((TDistributable) distributable, endpoint);
-
-                    _deliveryRepository?.RecordDelivery(new Delivery(distributable.Id, endpoint.Id));
 
                     OnSuccess((TDistributable) distributable, endpoint);
 
