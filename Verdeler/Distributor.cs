@@ -4,7 +4,7 @@ namespace Verdeler
 {
     public class Distributor<TDistributable> : IDistributor<TDistributable> where TDistributable : IDistributable
     {
-        private List<IEndpointDeliveryCoordinator<TDistributable>> _endpointDeliveryCoordinators
+        private readonly List<IEndpointDeliveryCoordinator<TDistributable>> _endpointDeliveryCoordinators
             = new List<IEndpointDeliveryCoordinator<TDistributable>>();
 
         public void AddEndpoint<TEndpoint>(IEndpointRepository<TEndpoint> endpointRepository, IEndpointDeliveryService<TDistributable, TEndpoint> endpointDeliveryService)

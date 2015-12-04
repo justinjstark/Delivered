@@ -40,10 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Delivery.cs" />
     <Compile Include="EndpointDeliveryCoordinator.cs" />
     <Compile Include="Distributor.cs" />
-    <Compile Include="IDeliveryRepository.cs" />
     <Compile Include="IDistributable.cs" />
     <Compile Include="IDistributor.cs" />
     <Compile Include="IEndpointDeliveryCoordinator.cs" />
