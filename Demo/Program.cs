@@ -12,8 +12,8 @@ namespace Demo
         {
             //Configure the distributor
             var distributor = new Distributor<DistributableFile>();
-            distributor.EndpointDeliveryServices.Add(new SharepointDeliveryService());
-            distributor.EndpointDeliveryServices.Add(new FileSystemDeliveryService());
+            distributor.AddEndpoint(new SharepointEndpointRepository(), new SharepointDeliveryService());
+            distributor.AddEndpoint(new FileSystemEndpointRepository(), new FileSystemDeliveryService());
 
             //Distribute all files
             foreach (var distributableFile in GetDistributableFiles())

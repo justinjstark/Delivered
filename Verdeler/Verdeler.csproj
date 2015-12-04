@@ -41,12 +41,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Delivery.cs" />
-    <Compile Include="EndpointDeliveryService.cs" />
+    <Compile Include="EndpointDeliveryCoordinator.cs" />
     <Compile Include="Distributor.cs" />
-    <Compile Include="EndpointDeliveryServicesCollection.cs" />
     <Compile Include="IDeliveryRepository.cs" />
     <Compile Include="IDistributable.cs" />
     <Compile Include="IDistributor.cs" />
+    <Compile Include="IEndpointDeliveryCoordinator.cs" />
     <Compile Include="IEndpointDeliveryService.cs" />
     <Compile Include="IEndpoint.cs" />
     <Compile Include="IEndpointRepository.cs" />

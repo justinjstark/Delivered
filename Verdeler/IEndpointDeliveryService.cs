@@ -1,7 +1,9 @@
 ﻿namespace Verdeler
 {
-    public interface IEndpointDeliveryService
+    public interface IEndpointDeliveryService<in TDistributable, in TEndpoint>
+        where TDistributable : IDistributable
+        where TEndpoint : IEndpoint
     {
-        void Deliver(IDistributable distributable);
+        void Deliver(TDistributable disributable, TEndpoint endpoint);
     }
 }
