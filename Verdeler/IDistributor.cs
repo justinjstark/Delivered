@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Verdeler
+﻿namespace Verdeler
 {
     public interface IDistributor<in TDistributable> where TDistributable : IDistributable
     {
