@@ -1,6 +1,6 @@
 ﻿namespace Verdeler
 {
-    internal class EndpointDeliveryCoordinator<TDistributable, TEndpoint> : IEndpointDeliveryCoordinator<TDistributable>
+    internal class EndpointDeliveryCoordinator<TDistributable, TEndpoint> : IDeliveryCoordinator<TDistributable>
         where TDistributable : IDistributable
         where TEndpoint : IEndpoint
     {
