@@ -49,6 +49,7 @@
     <Compile Include="Endpoints\Sharepoint\SharepointDeliveryService.cs" />
     <Compile Include="Endpoints\Sharepoint\SharepointEndpoint.cs" />
     <Compile Include="Endpoints\Sharepoint\SharepointEndpointRepository.cs" />
+    <Compile Include="Vendor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -4,15 +4,17 @@ using System.Linq;
 
 namespace Verdeler
 {
-    public class Distributor<TDistributable> : IDistributor<TDistributable> where TDistributable : IDistributable
+    public class Distributor<TDistributable, TRecipient> : IDistributor<TDistributable, TRecipient>
+        where TDistributable : IDistributable
+        where TRecipient : IRecipient
     {
-        private readonly List<IEndpointRepository> _endpointRepositories
-            = new List<IEndpointRepository>();
+        private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
+            = new List<IEndpointRepository<TRecipient>>();
 
         private readonly Dictionary<Type, IEndpointDeliveryService> _endpointDeliveryServices
             = new Dictionary<Type, IEndpointDeliveryService>();
 
-        public void RegisterEndpointRepository(IEndpointRepository endpointRepository)
+        public void RegisterEndpointRepository(IEndpointRepository<TRecipient> endpointRepository)
         {
             if (!_endpointRepositories.Contains(endpointRepository))
             {
@@ -26,9 +28,9 @@ namespace Verdeler
             _endpointDeliveryServices[typeof(TEndpoint)] = endpointDeliveryService;
         }
 
-        public void Distribute(TDistributable distributable, string recipientName)
+        public void Distribute(TDistributable distributable, TRecipient recipient)
         {
-            var endpoints = _endpointRepositories.SelectMany(r => r.GetEndpointsForRecipient(recipientName));
+            var endpoints = _endpointRepositories.SelectMany(r => r.GetEndpointsForRecipient(recipient));
 
             foreach (var endpoint in endpoints)
             {

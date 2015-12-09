@@ -47,6 +47,7 @@
     <Compile Include="IEndpointDeliveryService.cs" />
     <Compile Include="IEndpoint.cs" />
     <Compile Include="IEndpointRepository.cs" />
+    <Compile Include="IRecipient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

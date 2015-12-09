@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Demo.Endpoints.FileSystem;
 using Demo.Endpoints.Sharepoint;
 using Verdeler;
@@ -11,35 +10,27 @@ namespace Demo
         private static void Main(string[] args)
         {
             //Configure the distributor
-            var distributor = new Distributor<DistributableFile>();
+            var distributor = new Distributor<DistributableFile, Vendor>();
             distributor.RegisterEndpointRepository(new FileSystemEndpointRepository());
             distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
             distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
             distributor.RegisterEndpointDeliveryService(new SharepointDeliveryService());
-
-            //Distribute all files
-            foreach (var distributableFile in GetDistributableFiles())
-            {
-                distributor.Distribute(distributableFile, "recipient");
-            }
+            
+            //Distribute a file to a vendor
+            distributor.Distribute(FakeFile, FakeVendor);
 
             Console.ReadLine();
         }
 
-        private static IEnumerable<DistributableFile> GetDistributableFiles()
+        private static DistributableFile FakeFile => new DistributableFile
         {
-            var distributableFiles = new List<DistributableFile>
-            {
-                new DistributableFile
-                {
-                    Id = Guid.NewGuid(),
-                    RecipientName = "TestRecipient",
-                    Name = "test.pdf",
-                    Contents = null
-                }
-            };
+            Name = @"test.pdf",
+            Contents = new byte[1024]
+        };
 
-            return distributableFiles;
-        }
+        private static Vendor FakeVendor => new Vendor
+        {
+            Name = @"Mark's Pool Supplies"
+        };
     }
 }
