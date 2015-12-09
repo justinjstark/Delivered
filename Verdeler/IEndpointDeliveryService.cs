@@ -5,12 +5,7 @@
         void Deliver(IDistributable distributable, IEndpoint endpoint);
     }
 
-    public interface IEndpointDeliveryService<in TEndpoint> : IEndpointDeliveryService
-    {
-        void Deliver(IDistributable distributable, TEndpoint endpoint);
-    }
-
-    public interface IEndpointDeliveryService<in TDistributable, in TEndpoint> : IEndpointDeliveryService<TEndpoint>
+    public interface IEndpointDeliveryService<in TDistributable, in TEndpoint> : IEndpointDeliveryService
         where TDistributable : IDistributable
         where TEndpoint : IEndpoint
     {
