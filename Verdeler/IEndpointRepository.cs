@@ -2,8 +2,8 @@
 
 namespace Verdeler
 {
-    public interface IEndpointRepository<in TRecipient> where TRecipient : IRecipient
+    public interface IEndpointRepository<in TRecipient> where TRecipient : Recipient
     {
-        IEnumerable<IEndpoint> GetEndpointsForRecipient(TRecipient recipient);
+        IEnumerable<Endpoint> GetEndpointsForRecipient(TRecipient recipient);
     }
 }
