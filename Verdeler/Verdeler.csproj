@@ -40,11 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EndpointDeliveryCoordinator.cs" />
     <Compile Include="Distributor.cs" />
+    <Compile Include="EndpointDeliveryService.cs" />
     <Compile Include="IDistributable.cs" />
     <Compile Include="IDistributor.cs" />
-    <Compile Include="IDeliveryCoordinator.cs" />
     <Compile Include="IEndpointDeliveryService.cs" />
     <Compile Include="IEndpoint.cs" />
     <Compile Include="IEndpointRepository.cs" />
