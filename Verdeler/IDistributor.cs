@@ -1,7 +1,9 @@
 ﻿namespace Verdeler
 {
-    public interface IDistributor<in TDistributable> where TDistributable : IDistributable
+    public interface IDistributor<in TDistributable, in TRecipient>
+        where TDistributable : IDistributable
+        where TRecipient : IRecipient
     {
-        void Distribute(TDistributable distributable, string recipientName);
+        void Distribute(TDistributable distributable, TRecipient recipient);
     }
 }
