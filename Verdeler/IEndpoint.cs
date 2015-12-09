@@ -1,9 +1,6 @@
-﻿using System;
-
-namespace Verdeler
+﻿namespace Verdeler
 {
     public interface IEndpoint
     {
-        Guid Id { get; }
     }
 }
