@@ -5,8 +5,8 @@ using System.Linq;
 namespace Verdeler
 {
     public class Distributor<TDistributable, TRecipient> : IDistributor<TDistributable, TRecipient>
-        where TDistributable : IDistributable
-        where TRecipient : IRecipient
+        where TDistributable : Distributable
+        where TRecipient : Recipient
     {
         private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
             = new List<IEndpointRepository<TRecipient>>();
@@ -23,7 +23,7 @@ namespace Verdeler
         }
 
         public void RegisterEndpointDeliveryService<TEndpoint>(IEndpointDeliveryService<TEndpoint> endpointDeliveryService)
-            where TEndpoint : IEndpoint
+            where TEndpoint : Endpoint
         {
             _endpointDeliveryServices[typeof(TEndpoint)] = endpointDeliveryService;
         }

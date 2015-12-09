@@ -1,6 +1,6 @@
 ﻿namespace Verdeler
 {
-    public interface IEndpoint
+    public abstract class Endpoint
     {
     }
 }

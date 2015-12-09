@@ -1,6 +1,6 @@
 ﻿namespace Verdeler
 {
-    public interface IDistributable
+    public abstract class Recipient
     {
     }
 }
