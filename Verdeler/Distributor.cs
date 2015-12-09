@@ -20,8 +20,7 @@ namespace Verdeler
             }
         }
 
-        public void RegisterEndpointDeliveryService<TEndpoint>(EndpointDeliveryService<TDistributable, TEndpoint> endpointDeliveryService)
-            where TEndpoint : IEndpoint
+        public void RegisterEndpointDeliveryService<TEndpoint>(IEndpointDeliveryService<TEndpoint> endpointDeliveryService)
         {
             _endpointDeliveryServices[typeof(TEndpoint)] = endpointDeliveryService;
         }
