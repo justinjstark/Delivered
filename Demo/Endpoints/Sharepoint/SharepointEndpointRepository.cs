@@ -3,9 +3,9 @@ using Verdeler;
 
 namespace Demo.Endpoints.Sharepoint
 {
-    public class SharepointEndpointRepository : IEndpointRepository<SharepointEndpoint>
+    public class SharepointEndpointRepository : IEndpointRepository
     {
-        public IEnumerable<SharepointEndpoint> GetEndpointsForRecipient(string recipientName)
+        public IEnumerable<IEndpoint> GetEndpointsForRecipient(string recipientName)
         {
             return new List<SharepointEndpoint>
             {

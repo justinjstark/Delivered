@@ -3,9 +3,9 @@ using Verdeler;
 
 namespace Demo.Endpoints.FileSystem
 {
-    public class FileSystemEndpointRepository : IEndpointRepository<FileSystemEndpoint>
+    public class FileSystemEndpointRepository : IEndpointRepository
     {
-        public IEnumerable<FileSystemEndpoint> GetEndpointsForRecipient(string recipientName)
+        public IEnumerable<IEndpoint> GetEndpointsForRecipient(string recipientName)
         {
             return new List<FileSystemEndpoint>
             {

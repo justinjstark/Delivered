@@ -1,25 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Verdeler
 {
     public class Distributor<TDistributable> : IDistributor<TDistributable> where TDistributable : IDistributable
     {
-        private readonly List<IDeliveryCoordinator<TDistributable>> _deliveryCoordinators
-            = new List<IDeliveryCoordinator<TDistributable>>();
+        private readonly List<IEndpointRepository> _endpointRepositories
+            = new List<IEndpointRepository>();
 
-        public void AddEndpoint<TEndpoint>(IEndpointRepository<TEndpoint> endpointRepository, IEndpointDeliveryService<TDistributable, TEndpoint> endpointDeliveryService)
-            where TEndpoint : IEndpoint
+        private readonly Dictionary<Type, IEndpointDeliveryService> _endpointDeliveryServices
+            = new Dictionary<Type, IEndpointDeliveryService>();
+
+        public void RegisterEndpointRepository(IEndpointRepository endpointRepository)
         {
-            _deliveryCoordinators.Add(
-                new EndpointDeliveryCoordinator<TDistributable, TEndpoint>(endpointRepository, endpointDeliveryService)
-            );
+            if (!_endpointRepositories.Contains(endpointRepository))
+            {
+                _endpointRepositories.Add(endpointRepository);
+            }
         }
 
-        public void Distribute(TDistributable distributable)
+        public void RegisterEndpointDeliveryService<TEndpoint>(IEndpointDeliveryService<TEndpoint> endpointDeliveryService)
         {
-            foreach (var deliveryCoordinator in _deliveryCoordinators)
+            _endpointDeliveryServices[typeof(TEndpoint)] = endpointDeliveryService;
+        }
+
+        public void Distribute(TDistributable distributable, string recipientName)
+        {
+            var endpoints = _endpointRepositories.SelectMany(r => r.GetEndpointsForRecipient(recipientName));
+
+            foreach (var endpoint in endpoints)
             {
-                deliveryCoordinator.Deliver(distributable);
+                var endpointDeliveryService = _endpointDeliveryServices[endpoint.GetType()];
+
+                endpointDeliveryService.Deliver(distributable, endpoint);
             }
         }
     }
