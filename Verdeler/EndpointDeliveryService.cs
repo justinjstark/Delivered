@@ -1,4 +1,6 @@
-﻿namespace Verdeler
+﻿using System.Threading.Tasks;
+
+namespace Verdeler
 {
     public abstract class EndpointDeliveryService<TDistributable, TEndpoint> : IEndpointDeliveryService<TDistributable, TEndpoint>
         where TDistributable : Distributable

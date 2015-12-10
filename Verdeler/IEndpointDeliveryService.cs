@@ -1,4 +1,6 @@
-﻿namespace Verdeler
+﻿using System.Threading.Tasks;
+
+namespace Verdeler
 {
     public interface IEndpointDeliveryService
     {

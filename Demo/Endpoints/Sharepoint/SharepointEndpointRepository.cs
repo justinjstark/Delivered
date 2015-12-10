@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Verdeler;
 
 namespace Demo.Endpoints.Sharepoint
@@ -7,6 +9,10 @@ namespace Demo.Endpoints.Sharepoint
     {
         public IEnumerable<Endpoint> GetEndpointsForRecipient(Vendor vendor)
         {
+            Console.WriteLine("Getting SharePoint endpoints");
+
+            Console.WriteLine("Got SharePoint endpoints");
+
             return new List<SharepointEndpoint>
             {
                 new SharepointEndpoint { Uri = @"http://sharepoint.com" }

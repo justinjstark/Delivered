@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Verdeler;
 
 namespace Demo.Endpoints.Sharepoint
@@ -8,6 +9,10 @@ namespace Demo.Endpoints.Sharepoint
         public override void Deliver(DistributableFile file, SharepointEndpoint endpoint)
         {
             Console.WriteLine($"Distributing file {file.Name} to Sharepoint URI {endpoint.Uri}");
+
+            Thread.Sleep(1000);
+
+            Console.WriteLine($"Distributed file {file.Name} to Sharepoint URI {endpoint.Uri}");
         }
     }
 }
