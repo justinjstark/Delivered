@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Verdeler;
 
@@ -7,7 +6,12 @@ namespace Demo.Endpoints.Sharepoint
 {
     public class SharepointDeliveryService : EndpointDeliveryService<DistributableFile, SharepointEndpoint>
     {
-        public override async Task DeliverAsync(DistributableFile file, SharepointEndpoint endpoint)
+        public SharepointDeliveryService()
+        {
+            MaximumConcurrentDeliveries(1);
+        }
+
+        protected override async Task DoDeliveryAsync(DistributableFile file, SharepointEndpoint endpoint)
         {
             Console.WriteLine($"Distributing file {file.Name} to Sharepoint URI {endpoint.Uri}");
 

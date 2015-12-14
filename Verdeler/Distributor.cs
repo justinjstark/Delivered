@@ -10,17 +10,25 @@ namespace Verdeler
         where TDistributable : Distributable
         where TRecipient : Recipient
     {
-        public int MaxConcurrentDeliveries;
+        private SemaphoreSlim _semaphore;
 
         private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
             = new List<IEndpointRepository<TRecipient>>();
 
+        private readonly Dictionary<Type, SemaphoreSlim> _endpointThrottlers
+            = new Dictionary<Type, SemaphoreSlim>();
+
         private readonly Dictionary<Type, IEndpointDeliveryService> _endpointDeliveryServices
             = new Dictionary<Type, IEndpointDeliveryService>();
 
-        public Distributor()
+        public void MaximumConcurrentDeliveries(int number)
         {
-            MaxConcurrentDeliveries = 10;
+            if (number <= 0)
+            {
+                throw new ArgumentException(nameof(number));
+            }
+
+            _semaphore = new SemaphoreSlim(number);
         }
 
         public void RegisterEndpointRepository(IEndpointRepository<TRecipient> endpointRepository)
@@ -39,22 +47,23 @@ namespace Verdeler
 
         public async Task DistributeAsync(TDistributable distributable, TRecipient recipient)
         {
-            var throttler = new SemaphoreSlim(MaxConcurrentDeliveries);
-
             var endpoints = _endpointRepositories
                 .SelectMany(r => r.GetEndpointsForRecipient(recipient));
 
             var deliveryTasks = endpoints
                 .Select(e => new {Endpoint = e, EndpointDeliveryService = _endpointDeliveryServices[e.GetType()]})
-                .Select(e => DeliverAsync(throttler, e.EndpointDeliveryService, distributable, e.Endpoint));
+                .Select(e => DeliverAsync(e.EndpointDeliveryService, distributable, e.Endpoint));
 
             await Task.WhenAll(deliveryTasks).ConfigureAwait(false);
         }
 
-        public async Task DeliverAsync(SemaphoreSlim throttler, IEndpointDeliveryService endpointDeliveryService,
+        public async Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService,
             TDistributable distributable, Endpoint endpoint)
         {
-            await throttler.WaitAsync().ConfigureAwait(false);
+            if (_semaphore != null)
+            {
+                await _semaphore.WaitAsync().ConfigureAwait(false);
+            }
 
             try
             {
@@ -62,7 +71,7 @@ namespace Verdeler
             }
             finally
             {
-                throttler.Release();
+                _semaphore?.Release();
             }
         }
     }
