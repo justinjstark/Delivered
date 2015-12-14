@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Verdeler
@@ -11,7 +10,7 @@ namespace Verdeler
         where TDistributable : Distributable
         where TRecipient : Recipient
     {
-        public Concurrency Concurrency;
+        public int MaxConcurrentDeliveries;
 
         private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
             = new List<IEndpointRepository<TRecipient>>();
@@ -21,7 +20,7 @@ namespace Verdeler
 
         public Distributor()
         {
-            Concurrency = Concurrency.Asynchronous;
+            MaxConcurrentDeliveries = 10;
         }
 
         public void RegisterEndpointRepository(IEndpointRepository<TRecipient> endpointRepository)
@@ -40,26 +39,31 @@ namespace Verdeler
 
         public async Task DistributeAsync(TDistributable distributable, TRecipient recipient)
         {
+            var throttler = new SemaphoreSlim(MaxConcurrentDeliveries);
+
             var endpoints = _endpointRepositories
                 .SelectMany(r => r.GetEndpointsForRecipient(recipient));
 
             var deliveryTasks = endpoints
                 .Select(e => new {Endpoint = e, EndpointDeliveryService = _endpointDeliveryServices[e.GetType()]})
-                .Select(e => DeliverAsync(e.EndpointDeliveryService, distributable, e.Endpoint));
+                .Select(e => DeliverAsync(throttler, e.EndpointDeliveryService, distributable, e.Endpoint));
 
             await Task.WhenAll(deliveryTasks);
         }
 
-        public async Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService, TDistributable distributable, Endpoint endpoint)
+        public async Task DeliverAsync(SemaphoreSlim throttler, IEndpointDeliveryService endpointDeliveryService,
+            TDistributable distributable, Endpoint endpoint)
         {
-            var deliveryTask = endpointDeliveryService.DeliverAsync(distributable, endpoint);
+            await throttler.WaitAsync();
 
-            if (Concurrency == Concurrency.Synchronous)
+            try
             {
-                deliveryTask.Wait();
+                await endpointDeliveryService.DeliverAsync(distributable, endpoint);
             }
-
-            await deliveryTask;
+            finally
+            {
+                throttler.Release();
+            }
         }
     }
 }
