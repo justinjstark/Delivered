@@ -16,7 +16,7 @@ namespace Demo
             distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
             distributor.RegisterEndpointDeliveryService(new SharepointDeliveryService());
 
-            distributor.MaxConcurrentDeliveries = 1;
+            distributor.MaxConcurrentDeliveries = 10;
             
             //Distribute a file to a vendor
             var distributionTask = distributor.DistributeAsync(FakeFile, FakeVendor);
