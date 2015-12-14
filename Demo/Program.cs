@@ -16,12 +16,13 @@ namespace Demo
             distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
             distributor.RegisterEndpointDeliveryService(new SharepointDeliveryService());
 
-            distributor.DeliveryConcurrency = Concurrency.Asynchronous;
+            distributor.Concurrency = Concurrency.Synchronous;
             
             //Distribute a file to a vendor
             var distributionTask = distributor.DistributeAsync(FakeFile, FakeVendor);
 
             Console.WriteLine("All deliveries started.");
+
             distributionTask.Wait();
             Console.WriteLine("All deliveries complete.");
 

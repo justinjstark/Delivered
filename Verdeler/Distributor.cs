@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace Verdeler
         where TDistributable : Distributable
         where TRecipient : Recipient
     {
-        public Concurrency DeliveryConcurrency;
+        public Concurrency Concurrency;
 
         private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
             = new List<IEndpointRepository<TRecipient>>();
@@ -20,7 +21,7 @@ namespace Verdeler
 
         public Distributor()
         {
-            DeliveryConcurrency = Concurrency.Asynchronous;
+            Concurrency = Concurrency.Asynchronous;
         }
 
         public void RegisterEndpointRepository(IEndpointRepository<TRecipient> endpointRepository)
@@ -40,38 +41,25 @@ namespace Verdeler
         public async Task DistributeAsync(TDistributable distributable, TRecipient recipient)
         {
             var endpoints = _endpointRepositories
-                .Select(r => r.GetEndpointsForRecipient(recipient));
+                .SelectMany(r => r.GetEndpointsForRecipient(recipient));
 
             var deliveryTasks = endpoints
-                .SelectMany(e => DeliverToEndpoints(e, distributable));
+                .Select(e => new {Endpoint = e, EndpointDeliveryService = _endpointDeliveryServices[e.GetType()]})
+                .Select(e => DeliverAsync(e.EndpointDeliveryService, distributable, e.Endpoint));
 
             await Task.WhenAll(deliveryTasks);
         }
 
-        private IEnumerable<Task> DeliverToEndpoints(IEnumerable<Endpoint> endpoints, TDistributable distributable)
+        public async Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService, TDistributable distributable, Endpoint endpoint)
         {
-            return endpoints
-                .Select(e => new {EndpointDeliveryService = _endpointDeliveryServices[e.GetType()], Endpoint = e})
-                .Select(e => DeliverAsync(e.EndpointDeliveryService, distributable, e.Endpoint));
-        }
+            var deliveryTask = endpointDeliveryService.DeliverAsync(distributable, endpoint);
 
-        private Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService, TDistributable distributable, Endpoint endpoint)
-        {
-            var task = new Task(() => endpointDeliveryService.DeliverAsync(distributable, endpoint));
-
-            switch (DeliveryConcurrency)
+            if (Concurrency == Concurrency.Synchronous)
             {
-                case Concurrency.Asynchronous:
-                    task.Start();
-                    break;
-                case Concurrency.Synchronous:
-                    task.RunSynchronously();
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException(nameof(DeliveryConcurrency));
+                deliveryTask.Wait();
             }
 
-            return task;
+            await deliveryTask;
         }
     }
 }
