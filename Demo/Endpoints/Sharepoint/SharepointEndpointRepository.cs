@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Verdeler;
 
@@ -10,6 +11,8 @@ namespace Demo.Endpoints.Sharepoint
         public IEnumerable<Endpoint> GetEndpointsForRecipient(Vendor vendor)
         {
             Console.WriteLine("Getting SharePoint endpoints");
+
+            Thread.Sleep(1000);
 
             Console.WriteLine("Got SharePoint endpoints");
 

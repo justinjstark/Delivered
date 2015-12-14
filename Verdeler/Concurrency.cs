@@ -1,6 +1,6 @@
 ﻿namespace Verdeler
 {
-    public enum Synchrony
+    public enum Concurrency
     {
         Synchronous = 0,
         Asynchronous = 1

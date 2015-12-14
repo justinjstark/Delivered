@@ -6,6 +6,6 @@ namespace Verdeler
         where TDistributable : Distributable
         where TRecipient : Recipient
     {
-        Task Distribute(TDistributable distributable, TRecipient recipient);
+        Task DistributeAsync(TDistributable distributable, TRecipient recipient);
     }
 }

@@ -15,11 +15,11 @@ namespace Demo
             distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
             distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
             distributor.RegisterEndpointDeliveryService(new SharepointDeliveryService());
-            distributor.EndpointRetrievalSynchrony = Synchrony.Asynchronous;
-            distributor.DeliverySynchrony = Synchrony.Synchronous;
+
+            distributor.DeliveryConcurrency = Concurrency.Asynchronous;
             
             //Distribute a file to a vendor
-            var distributionTask = distributor.Distribute(FakeFile, FakeVendor);
+            var distributionTask = distributor.DistributeAsync(FakeFile, FakeVendor);
 
             Console.WriteLine("All deliveries started.");
             distributionTask.Wait();

@@ -6,16 +6,16 @@ namespace Verdeler
         where TDistributable : Distributable
         where TEndpoint : Endpoint
     {
-        public abstract void Deliver(TDistributable distributable, TEndpoint endpiont);
+        public abstract Task DeliverAsync(TDistributable distributable, TEndpoint endpiont);
 
-        public void Deliver(Distributable distributable, TEndpoint endpoint)
+        public async Task DeliverAsync(Distributable distributable, TEndpoint endpoint)
         {
-            Deliver((TDistributable) distributable, endpoint);
+            await DeliverAsync((TDistributable) distributable, endpoint);
         }
 
-        public void Deliver(Distributable distributable, Endpoint endpoint)
+        public async Task DeliverAsync(Distributable distributable, Endpoint endpoint)
         {
-            Deliver((TDistributable)distributable, (TEndpoint)endpoint);
+            await DeliverAsync((TDistributable) distributable, (TEndpoint)endpoint);
         }
     }
 }

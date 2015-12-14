@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Verdeler
@@ -8,8 +10,7 @@ namespace Verdeler
         where TDistributable : Distributable
         where TRecipient : Recipient
     {
-        public Synchrony EndpointRetrievalSynchrony;
-        public Synchrony DeliverySynchrony;
+        public Concurrency DeliveryConcurrency;
 
         private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
             = new List<IEndpointRepository<TRecipient>>();
@@ -19,8 +20,7 @@ namespace Verdeler
 
         public Distributor()
         {
-            EndpointRetrievalSynchrony = Synchrony.Asynchronous;
-            DeliverySynchrony = Synchrony.Asynchronous;
+            DeliveryConcurrency = Concurrency.Asynchronous;
         }
 
         public void RegisterEndpointRepository(IEndpointRepository<TRecipient> endpointRepository)
@@ -37,42 +37,41 @@ namespace Verdeler
             _endpointDeliveryServices[typeof(TEndpoint)] = endpointDeliveryService;
         }
 
-        public Task Distribute(TDistributable distributable, TRecipient recipient)
+        public async Task DistributeAsync(TDistributable distributable, TRecipient recipient)
         {
-            var deliveryTasks = new List<Task>();
+            var endpoints = _endpointRepositories
+                .Select(r => r.GetEndpointsForRecipient(recipient));
 
-            var getEndpointsTaskScheduler = new LimitedConcurrencyLevelTaskScheduler(EndpointRetrievalSynchrony == Synchrony.Synchronous ? 1 : 99);
-            var getEndpointsTaskFactory = new TaskFactory(getEndpointsTaskScheduler);
+            var deliveryTasks = endpoints
+                .SelectMany(e => DeliverToEndpoints(e, distributable));
 
-            var deliverToEndpointsTaskScheduler = new LimitedConcurrencyLevelTaskScheduler(DeliverySynchrony == Synchrony.Synchronous ? 1 : 99);
-            var deliverToEndpointsTaskFactory = new TaskFactory(deliverToEndpointsTaskScheduler);
-
-            foreach (var endpointRepository in _endpointRepositories)
-            {
-                var getEndpointsTask = getEndpointsTaskFactory.StartNew(() => endpointRepository.GetEndpointsForRecipient(recipient));
-
-                var deliverToEndpointsTasks = DeliverToEndpoints(deliverToEndpointsTaskFactory, getEndpointsTask.Result, distributable);
-
-                deliveryTasks.AddRange(deliverToEndpointsTasks);
-            }
-
-            return Task.WhenAll(deliveryTasks);
+            await Task.WhenAll(deliveryTasks);
         }
 
-        private IEnumerable<Task> DeliverToEndpoints(TaskFactory deliverToEndpointsTaskFactory, IEnumerable<Endpoint> endpoints, TDistributable distributable)
+        private IEnumerable<Task> DeliverToEndpoints(IEnumerable<Endpoint> endpoints, TDistributable distributable)
         {
-            var deliveryTasks = new List<Task>();
+            return endpoints
+                .Select(e => new {EndpointDeliveryService = _endpointDeliveryServices[e.GetType()], Endpoint = e})
+                .Select(e => DeliverAsync(e.EndpointDeliveryService, distributable, e.Endpoint));
+        }
 
-            foreach (var endpoint in endpoints)
+        private Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService, TDistributable distributable, Endpoint endpoint)
+        {
+            var task = new Task(() => endpointDeliveryService.DeliverAsync(distributable, endpoint));
+
+            switch (DeliveryConcurrency)
             {
-                var endpointDeliveryService = _endpointDeliveryServices[endpoint.GetType()];
-
-                var deliveryTask = deliverToEndpointsTaskFactory.StartNew(() => endpointDeliveryService.Deliver(distributable, endpoint), TaskCreationOptions.AttachedToParent);
-
-                deliveryTasks.Add(deliveryTask);
+                case Concurrency.Asynchronous:
+                    task.Start();
+                    break;
+                case Concurrency.Synchronous:
+                    task.RunSynchronously();
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException(nameof(DeliveryConcurrency));
             }
 
-            return deliveryTasks;
+            return task;
         }
     }
 }
