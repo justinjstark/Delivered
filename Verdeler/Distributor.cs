@@ -52,13 +52,13 @@ namespace Verdeler
 
             var deliveryTasks = endpoints
                 .Select(e => new {Endpoint = e, EndpointDeliveryService = _endpointDeliveryServices[e.GetType()]})
-                .Select(e => DeliverAsync(e.EndpointDeliveryService, distributable, e.Endpoint));
+                .Select(e => DeliverAsync(e.EndpointDeliveryService, distributable, e.Endpoint, recipient));
 
             await Task.WhenAll(deliveryTasks).ConfigureAwait(false);
         }
 
         public async Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService,
-            TDistributable distributable, Endpoint endpoint)
+            TDistributable distributable, Endpoint endpoint, Recipient recipient)
         {
             if (_semaphore != null)
             {
@@ -67,7 +67,7 @@ namespace Verdeler
 
             try
             {
-                await endpointDeliveryService.DeliverAsync(distributable, endpoint).ConfigureAwait(false);
+                await endpointDeliveryService.DeliverAsync(distributable, endpoint, recipient).ConfigureAwait(false);
             }
             finally
             {

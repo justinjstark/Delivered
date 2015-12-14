@@ -4,18 +4,18 @@ namespace Verdeler
 {
     public interface IEndpointDeliveryService
     {
-        Task DeliverAsync(Distributable distributable, Endpoint endpoint);
+        Task DeliverAsync(Distributable distributable, Endpoint endpoint, Recipient recipient);
     }
 
     public interface IEndpointDeliveryService<in TEndpoint> : IEndpointDeliveryService
     {
-        Task DeliverAsync(Distributable distributable, TEndpoint endpoint);
+        Task DeliverAsync(Distributable distributable, TEndpoint endpoint, Recipient recipient);
     }
 
     public interface IEndpointDeliveryService<in TDistributable, in TEndpoint> : IEndpointDeliveryService<TEndpoint>
         where TDistributable : Distributable
         where TEndpoint : Endpoint
     {
-        Task DeliverAsync(TDistributable disributable, TEndpoint endpoint);
+        Task DeliverAsync(TDistributable disributable, TEndpoint endpoint, Recipient recipient);
     }
 }
