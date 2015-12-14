@@ -48,7 +48,7 @@ namespace Verdeler
                 .Select(e => new {Endpoint = e, EndpointDeliveryService = _endpointDeliveryServices[e.GetType()]})
                 .Select(e => DeliverAsync(throttler, e.EndpointDeliveryService, distributable, e.Endpoint));
 
-            await Task.WhenAll(deliveryTasks);
+            await Task.WhenAll(deliveryTasks).ConfigureAwait(false);
         }
 
         public async Task DeliverAsync(SemaphoreSlim throttler, IEndpointDeliveryService endpointDeliveryService,
@@ -58,7 +58,7 @@ namespace Verdeler
 
             try
             {
-                await endpointDeliveryService.DeliverAsync(distributable, endpoint);
+                await endpointDeliveryService.DeliverAsync(distributable, endpoint).ConfigureAwait(false);
             }
             finally
             {
