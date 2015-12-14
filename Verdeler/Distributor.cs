@@ -54,7 +54,7 @@ namespace Verdeler
         public async Task DeliverAsync(SemaphoreSlim throttler, IEndpointDeliveryService endpointDeliveryService,
             TDistributable distributable, Endpoint endpoint)
         {
-            await throttler.WaitAsync();
+            await throttler.WaitAsync().ConfigureAwait(false);
 
             try
             {
