@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Demo.Endpoints.FileSystem;
 using Demo.Endpoints.Sharepoint;
 using Verdeler;
@@ -19,10 +20,11 @@ namespace Demo
             
             //Distribute a file to a vendor
             var distributionTask = distributor.DistributeAsync(FakeFile, FakeVendor);
+            var distributionTask2 = distributor.DistributeAsync(FakeFile, FakeVendor);
 
             Console.WriteLine("All deliveries started.");
 
-            distributionTask.Wait();
+            Task.WaitAll(distributionTask, distributionTask2);
             Console.WriteLine("All deliveries complete.");
 
             Console.ReadLine();
@@ -37,6 +39,11 @@ namespace Demo
         private static Vendor FakeVendor => new Vendor
         {
             Name = @"Mark's Pool Supplies"
+        };
+
+        private static Vendor FakeVendor2 => new Vendor
+        {
+            Name = @"Kevin's Art Supplies"
         };
     }
 }

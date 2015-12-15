@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Verdeler
 {
-    public abstract class EndpointDeliveryService<TDistributable, TEndpoint> : IEndpointDeliveryService<TDistributable, TEndpoint>
+    public abstract class EndpointDeliveryService<TDistributable, TEndpoint>
+        : IEndpointDeliveryService<TDistributable, TEndpoint>
         where TDistributable : Distributable
         where TEndpoint : Endpoint
     {
         private SemaphoreSlim _semaphore;
-        private SemaphoreSlim _recipientSemaphore;
+        private int _maximumConcurrentDeliveriesPerRecipient;
+        private ConcurrentDictionary<Recipient, SemaphoreSlim> _recipientSemaphores
+            = new ConcurrentDictionary<Recipient, SemaphoreSlim>();
 
         public void MaximumConcurrentDeliveries(int number)
         {
@@ -28,16 +32,18 @@ namespace Verdeler
                 throw new ArgumentException(nameof(number));
             }
 
-            _recipientSemaphore = new SemaphoreSlim(number);
+            _maximumConcurrentDeliveriesPerRecipient = number;
         }
 
         protected abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);
 
         public async Task DeliverAsync(TDistributable distributable, TEndpoint endpoint, Recipient recipient)
         {
-            if (_recipientSemaphore != null)
+            var recipientSemaphore = GetRecipientSemaphore(recipient);
+
+            if (recipientSemaphore != null)
             {
-                await _recipientSemaphore.WaitAsync().ConfigureAwait(false);
+                await recipientSemaphore.WaitAsync().ConfigureAwait(false);
             }
 
             if (_semaphore != null)
@@ -51,7 +57,7 @@ namespace Verdeler
             }
             finally
             {
-                _recipientSemaphore?.Release();
+                recipientSemaphore?.Release();
                 _semaphore?.Release();
             }
         }
@@ -64,6 +70,11 @@ namespace Verdeler
         public async Task DeliverAsync(Distributable distributable, Endpoint endpoint, Recipient recipient)
         {
             await DeliverAsync((TDistributable) distributable, (TEndpoint) endpoint, recipient).ConfigureAwait(false);
+        }
+
+        private SemaphoreSlim GetRecipientSemaphore(Recipient recipient)
+        {
+            return _recipientSemaphores.GetOrAdd(recipient, new SemaphoreSlim(_maximumConcurrentDeliveriesPerRecipient));
         }
     }
 }

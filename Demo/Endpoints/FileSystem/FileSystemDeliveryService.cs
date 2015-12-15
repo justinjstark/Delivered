@@ -8,6 +8,7 @@ namespace Demo.Endpoints.FileSystem
     {
         public FileSystemDeliveryService()
         {
+            MaximumConcurrentDeliveries(10);
             MaximumConcurrentDeliveriesPerRecipient(1);
         }
 

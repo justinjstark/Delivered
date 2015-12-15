@@ -15,9 +15,6 @@ namespace Verdeler
         private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
             = new List<IEndpointRepository<TRecipient>>();
 
-        private readonly Dictionary<Type, SemaphoreSlim> _endpointThrottlers
-            = new Dictionary<Type, SemaphoreSlim>();
-
         private readonly Dictionary<Type, IEndpointDeliveryService> _endpointDeliveryServices
             = new Dictionary<Type, IEndpointDeliveryService>();
 
