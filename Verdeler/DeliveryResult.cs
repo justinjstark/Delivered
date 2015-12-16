@@ -4,15 +4,11 @@ namespace Verdeler
 {
     public abstract class DeliveryResult
     {
-        public DateTime AttemptDateTimeUtc;
-    }
+        public DateTime AttemptDateTime { get; private set; }
 
-    public class SuccessfulDelivery : DeliveryResult
-    {
-    }
-
-    public class FailedDelivery : DeliveryResult
-    {
-        public Exception Exception;
+        protected DeliveryResult(DateTime attemptDateTime)
+        {
+            AttemptDateTime = attemptDateTime;
+        }
     }
 }

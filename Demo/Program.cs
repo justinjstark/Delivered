@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Demo.Endpoints.FileSystem;
 using Demo.Endpoints.Sharepoint;
 using Verdeler;
@@ -16,16 +15,16 @@ namespace Demo
             distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
             distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
             distributor.RegisterEndpointDeliveryService(new SharepointDeliveryService());
-            distributor.MaximumConcurrentDeliveries(10);
+            distributor.MaximumConcurrentDeliveries(1);
             
             //Distribute a file to a vendor
             var distributionTask = distributor.DistributeAsync(FakeFile, FakeVendor);
-            var distributionTask2 = distributor.DistributeAsync(FakeFile, FakeVendor);
 
-            Console.WriteLine("All deliveries started.");
+            var result = distributionTask.Result;
 
-            Task.WaitAll(distributionTask, distributionTask2);
-            Console.WriteLine("All deliveries complete.");
+            Console.WriteLine(result.Success() ? "\nDistribution succeeded." : "\nDistribution failed.");
+
+            Console.WriteLine("\nPress enter to exit.");
 
             Console.ReadLine();
         }

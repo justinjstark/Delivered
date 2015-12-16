@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Verdeler
 {
@@ -6,6 +7,6 @@ namespace Verdeler
         where TDistributable : Distributable
         where TRecipient : Recipient
     {
-        Task DistributeAsync(TDistributable distributable, TRecipient recipient);
+        Task<DistributionResult> DistributeAsync(TDistributable distributable, TRecipient recipient);
     }
 }
