@@ -11,8 +11,8 @@ namespace Verdeler
         where TEndpoint : Endpoint
     {
         private SemaphoreSlim _semaphore;
-        private int _maximumConcurrentDeliveriesPerRecipient;
-        private ConcurrentDictionary<Recipient, SemaphoreSlim> _recipientSemaphores
+        private int? _maximumConcurrentDeliveriesPerRecipient;
+        private readonly ConcurrentDictionary<Recipient, SemaphoreSlim> _recipientSemaphores
             = new ConcurrentDictionary<Recipient, SemaphoreSlim>();
 
         public void MaximumConcurrentDeliveries(int number)
@@ -74,7 +74,7 @@ namespace Verdeler
 
         private SemaphoreSlim GetRecipientSemaphore(Recipient recipient)
         {
-            return _recipientSemaphores.GetOrAdd(recipient, new SemaphoreSlim(_maximumConcurrentDeliveriesPerRecipient));
+            return _maximumConcurrentDeliveriesPerRecipient == null ? null : _recipientSemaphores.GetOrAdd(recipient, new SemaphoreSlim(_maximumConcurrentDeliveriesPerRecipient.Value));
         }
     }
 }
