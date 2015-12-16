@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,14 +41,14 @@ namespace Verdeler
             _endpointDeliveryServices[typeof(TEndpoint)] = endpointDeliveryService;
         }
 
-        public async Task<DistributionResult> DistributeAsync(TDistributable distributable, TRecipient recipient)
+        public async Task DistributeAsync(TDistributable distributable, TRecipient recipient)
         {
-            var deliveryTasks = new List<Task<DeliveryResult>>();
+            var deliveryTasks = new List<Task>();
 
             foreach (var endpointRepository in _endpointRepositories)
             {
                 var endpoints = endpointRepository.GetEndpointsForRecipient(recipient);
-                
+
                 foreach (var endpoint in endpoints)
                 {
                     var endpointDeliveryService = _endpointDeliveryServices[endpoint.GetType()];
@@ -59,15 +58,25 @@ namespace Verdeler
                 }
             }
 
-            await Task.WhenAll(deliveryTasks);
+            //Wait for all deliveries to complete
+            var task = Task.WhenAll(deliveryTasks);
 
-            var distributionResult = new DistributionResult();
-            distributionResult.DeliveryResults.AddRange(deliveryTasks.Select(t => t.Result));
-
-            return await Task.FromResult(distributionResult);
+            //This try-catch forces all deliveries to finish before an aggregate exception is thrown.
+            try
+            {
+                await task;
+            }
+            catch
+            {
+                if (task.Exception != null)
+                {
+                    throw task.Exception;
+                }
+                throw;
+            }
         }
 
-        private async Task<DeliveryResult> DeliverAsync(IEndpointDeliveryService endpointDeliveryService,
+        private async Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService,
             TDistributable distributable, Endpoint endpoint, Recipient recipient)
         {
             if (_semaphore != null)
@@ -75,19 +84,9 @@ namespace Verdeler
                 await _semaphore.WaitAsync().ConfigureAwait(false);
             }
 
-            var attemptDateTime = DateTime.Now;
-
             try
             {
-                await endpointDeliveryService.DeliverAsync(distributable, endpoint, recipient);
-
-                //Mark delivery successful
-                return new SuccessfulDelivery(attemptDateTime);
-            }
-            catch (Exception exception)
-            {
-                //Mark delivery failed
-                return new FailedDelivery(attemptDateTime, exception);
+                await endpointDeliveryService.DeliverAsync(distributable, endpoint, recipient).ConfigureAwait(false);
             }
             finally
             {

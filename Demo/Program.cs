@@ -18,11 +18,22 @@ namespace Demo
             distributor.MaximumConcurrentDeliveries(1);
             
             //Distribute a file to a vendor
-            var distributionTask = distributor.DistributeAsync(FakeFile, FakeVendor);
+            try
+            {
+                var task = distributor.DistributeAsync(FakeFile, FakeVendor);
+                task.Wait();
 
-            var result = distributionTask.Result;
+                Console.WriteLine("\nDistribution succeeded.");
+            }
+            catch(AggregateException aggregateException)
+            {
+                Console.WriteLine("\nDistribution failed.");
 
-            Console.WriteLine(result.Success() ? "\nDistribution succeeded." : "\nDistribution failed.");
+                foreach (var exception in aggregateException.Flatten().InnerExceptions)
+                {
+                    Console.WriteLine($"* {exception.Message}");
+                }
+            }
 
             Console.WriteLine("\nPress enter to exit.");
 
