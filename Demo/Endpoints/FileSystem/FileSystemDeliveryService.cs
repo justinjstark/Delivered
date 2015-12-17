@@ -18,6 +18,8 @@ namespace Demo.Endpoints.FileSystem
 
             await Task.Delay(2000);
 
+            throw new Exception("Oh crap!");
+
             Console.WriteLine($"Distributed file {file.Name} to File System directory {endpoint.Directory}");
 
             await Task.FromResult(0);

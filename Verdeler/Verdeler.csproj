@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concurrency.cs" />
+    <Compile Include="DistributionCoordinator.cs" />
     <Compile Include="Distributor.cs" />
     <Compile Include="EndpointDeliveryService.cs" />
     <Compile Include="Distributable.cs" />
