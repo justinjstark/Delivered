@@ -35,7 +35,7 @@ namespace Verdeler
             _maximumConcurrentDeliveriesPerRecipient = number;
         }
 
-        protected abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);
+        public abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);
 
         public async Task DeliverAsync(TDistributable distributable, TEndpoint endpoint, Recipient recipient)
         {
