@@ -8,8 +8,7 @@ namespace Demo.Endpoints.FileSystem
     {
         public FileSystemDeliveryService()
         {
-            MaximumConcurrentDeliveries(10);
-            MaximumConcurrentDeliveriesPerRecipient(1);
+            MaximumConcurrentDeliveries(5);
         }
 
         public override async Task DoDeliveryAsync(DistributableFile file, FileSystemEndpoint endpoint)

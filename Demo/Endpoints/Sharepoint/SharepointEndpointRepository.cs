@@ -17,7 +17,9 @@ namespace Demo.Endpoints.Sharepoint
 
             return new List<SharepointEndpoint>
             {
-                new SharepointEndpoint { Uri = @"http://sharepoint.com" }
+                new SharepointEndpoint { Uri = @"http://sharepoint.com/test1" },
+                new SharepointEndpoint { Uri = @"http://sharepoint.com/test2" },
+                new SharepointEndpoint { Uri = @"http://somethingelse.com/test3" }
             };
         }
     }

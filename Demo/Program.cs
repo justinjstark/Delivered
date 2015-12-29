@@ -15,7 +15,7 @@ namespace Demo
             distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
             distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
             distributor.RegisterEndpointDeliveryService(new SharepointDeliveryService());
-            distributor.MaximumConcurrentDeliveries(1);
+            //distributor.MaximumConcurrentDeliveries(1);
             
             //Distribute a file to a vendor
             try

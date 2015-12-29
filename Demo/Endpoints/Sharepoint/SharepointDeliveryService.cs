@@ -8,7 +8,7 @@ namespace Demo.Endpoints.Sharepoint
     {
         public SharepointDeliveryService()
         {
-            MaximumConcurrentDeliveries(1);
+            MaximumConcurrentDeliveries(e => new Uri(e.Uri).Host, 1);
         }
 
         public override async Task DoDeliveryAsync(DistributableFile file, SharepointEndpoint endpoint)
