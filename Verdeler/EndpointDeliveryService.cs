@@ -42,7 +42,7 @@ namespace Verdeler
             
             await Task.WhenAll(
                 endpointSemaphore?.WaitAsync() ?? Task.FromResult(0),
-                _semaphore?.WaitAsync() ?? Task.FromResult(0));
+                _semaphore?.WaitAsync() ?? Task.FromResult(0)).ConfigureAwait(false);
 
             try
             {
