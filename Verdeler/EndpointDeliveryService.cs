@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,9 +12,11 @@ namespace Verdeler
         where TEndpoint : Endpoint
     {
         private SemaphoreSlim _semaphore;
-        private int? _maximumConcurrentDeliveriesPerRecipient;
-        private readonly ConcurrentDictionary<Recipient, SemaphoreSlim> _recipientSemaphores
-            = new ConcurrentDictionary<Recipient, SemaphoreSlim>();
+
+        private int? _maximumConcurrentDeliveriesByEndpoint;
+        private Func<TEndpoint, object> _endpointConcurrencyReductionMap;
+        private readonly ConcurrentDictionary<object, SemaphoreSlim> _endpointSemaphores
+            = new ConcurrentDictionary<object, SemaphoreSlim>();
 
         public void MaximumConcurrentDeliveries(int number)
         {
@@ -25,31 +28,21 @@ namespace Verdeler
             _semaphore = new SemaphoreSlim(number);
         }
 
-        public void MaximumConcurrentDeliveriesPerRecipient(int number)
+        public void MaximumConcurrentDeliveries(Func<TEndpoint, object> reductionMap, int number)
         {
-            if (number <= 0)
-            {
-                throw new ArgumentException(nameof(number));
-            }
-
-            _maximumConcurrentDeliveriesPerRecipient = number;
+            _endpointConcurrencyReductionMap = reductionMap;
+            _maximumConcurrentDeliveriesByEndpoint = number;
         }
 
         public abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);
 
         public async Task DeliverAsync(TDistributable distributable, TEndpoint endpoint, Recipient recipient)
         {
-            var recipientSemaphore = GetRecipientSemaphore(recipient);
-
-            if (recipientSemaphore != null)
-            {
-                await recipientSemaphore.WaitAsync().ConfigureAwait(false);
-            }
-
-            if (_semaphore != null)
-            {
-                await _semaphore.WaitAsync().ConfigureAwait(false);
-            }
+            var endpointSemaphore = GetEndpointSemaphore(endpoint);
+            
+            await Task.WhenAll(
+                endpointSemaphore?.WaitAsync() ?? Task.FromResult(0),
+                _semaphore?.WaitAsync() ?? Task.FromResult(0));
 
             try
             {
@@ -57,7 +50,7 @@ namespace Verdeler
             }
             finally
             {
-                recipientSemaphore?.Release();
+                endpointSemaphore?.Release();
                 _semaphore?.Release();
             }
         }
@@ -72,9 +65,19 @@ namespace Verdeler
             await DeliverAsync((TDistributable) distributable, (TEndpoint) endpoint, recipient).ConfigureAwait(false);
         }
 
-        private SemaphoreSlim GetRecipientSemaphore(Recipient recipient)
+        private SemaphoreSlim GetEndpointSemaphore(TEndpoint endpoint)
         {
-            return _maximumConcurrentDeliveriesPerRecipient == null ? null : _recipientSemaphores.GetOrAdd(recipient, new SemaphoreSlim(_maximumConcurrentDeliveriesPerRecipient.Value));
+            if (_maximumConcurrentDeliveriesByEndpoint == null)
+            {
+                return null;
+            }
+
+            var reduced = _endpointConcurrencyReductionMap.Invoke(endpoint);
+
+            var semaphore = _endpointSemaphores.GetOrAdd(reduced,
+                new SemaphoreSlim(_maximumConcurrentDeliveriesByEndpoint.Value));
+
+            return semaphore;
         }
     }
 }
