@@ -10,8 +10,6 @@ namespace Verdeler
         where TDistributable : Distributable
         where TEndpoint : Endpoint
     {
-        private readonly ConcurrencyLimiter<TEndpoint> _concurrencyLimiter;
-
         private readonly List<ConcurrencyLimiter<TEndpoint>> _concurrencyLimiters =
             new List<ConcurrencyLimiter<TEndpoint>>();
         
