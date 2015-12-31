@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Verdeler
@@ -11,13 +10,11 @@ namespace Verdeler
         where TDistributable : Distributable
         where TEndpoint : Endpoint
     {
-        private SemaphoreSlim _semaphore;
+        private readonly ConcurrencyLimiter<TEndpoint> _concurrencyLimiter;
 
-        private int? _maximumConcurrentDeliveriesByEndpoint;
-        private Func<TEndpoint, object> _endpointConcurrencyReductionMap;
-        private readonly ConcurrentDictionary<object, SemaphoreSlim> _endpointSemaphores
-            = new ConcurrentDictionary<object, SemaphoreSlim>();
-
+        private readonly List<ConcurrencyLimiter<TEndpoint>> _concurrencyLimiters =
+            new List<ConcurrencyLimiter<TEndpoint>>();
+        
         public void MaximumConcurrentDeliveries(int number)
         {
             if (number <= 0)
@@ -25,24 +22,19 @@ namespace Verdeler
                 throw new ArgumentException(nameof(number));
             }
 
-            _semaphore = new SemaphoreSlim(number);
+            _concurrencyLimiters.Add(new ConcurrencyLimiter<TEndpoint>(e => 184204872305603, number));
         }
 
         public void MaximumConcurrentDeliveries(Func<TEndpoint, object> reductionMap, int number)
         {
-            _endpointConcurrencyReductionMap = reductionMap;
-            _maximumConcurrentDeliveriesByEndpoint = number;
+            _concurrencyLimiters.Add(new ConcurrencyLimiter<TEndpoint>(reductionMap, number));
         }
 
         public abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);
 
         public async Task DeliverAsync(TDistributable distributable, TEndpoint endpoint, Recipient recipient)
         {
-            var endpointSemaphore = GetEndpointSemaphore(endpoint);
-            
-            await Task.WhenAll(
-                endpointSemaphore?.WaitAsync() ?? Task.FromResult(0),
-                _semaphore?.WaitAsync() ?? Task.FromResult(0)).ConfigureAwait(false);
+            await Task.WhenAll(_concurrencyLimiters.Select(l => l.WaitFor(endpoint)));
 
             try
             {
@@ -50,8 +42,7 @@ namespace Verdeler
             }
             finally
             {
-                endpointSemaphore?.Release();
-                _semaphore?.Release();
+                _concurrencyLimiters.ForEach(l => l.Release(endpoint));
             }
         }
 
@@ -63,21 +54,6 @@ namespace Verdeler
         public async Task DeliverAsync(Distributable distributable, Endpoint endpoint, Recipient recipient)
         {
             await DeliverAsync((TDistributable) distributable, (TEndpoint) endpoint, recipient).ConfigureAwait(false);
-        }
-
-        private SemaphoreSlim GetEndpointSemaphore(TEndpoint endpoint)
-        {
-            if (_maximumConcurrentDeliveriesByEndpoint == null)
-            {
-                return null;
-            }
-
-            var reduced = _endpointConcurrencyReductionMap.Invoke(endpoint);
-
-            var semaphore = _endpointSemaphores.GetOrAdd(reduced,
-                new SemaphoreSlim(_maximumConcurrentDeliveriesByEndpoint.Value));
-
-            return semaphore;
         }
     }
 }
