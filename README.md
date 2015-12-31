@@ -4,6 +4,10 @@
 
 A .NET distribution framework supporting custom distributables and endpoints.
 
+## How It Works
+
+Verdeler is designed to coordinate the delivery of files or other custom distributables to recipient endpoints. It is possible for one recipient to have multiple endpoints of various types (FTP, Sharepoint, Web Service, etc). Once Verdeler is configured, calling the `Distribute(distributable, recipient)` method will send the distributable to all endpoints associated with the recipient. Verdeler chooses which endpoint delivery service(s) to use based on the type of the endpoint returned from an endpoint repository.
+
 ## Setup
 
 **1. Define a type of distributable**
