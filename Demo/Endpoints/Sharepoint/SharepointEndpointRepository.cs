@@ -19,6 +19,7 @@ namespace Demo.Endpoints.Sharepoint
             {
                 new SharepointEndpoint { Uri = @"http://sharepoint.com/test1" },
                 new SharepointEndpoint { Uri = @"http://sharepoint.com/test2" },
+                new SharepointEndpoint { Uri = @"http://sharepoint.com/test3" },
                 new SharepointEndpoint { Uri = @"http://somethingelse.com/test3" }
             };
         }

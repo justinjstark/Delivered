@@ -27,19 +27,19 @@ namespace Verdeler
 
         public async Task WaitFor(TSubject subject)
         {
-            var semaphore = GetSemaphore(subject);
+            var semaphore = GetSemaphoreForReduction(subject);
 
             await semaphore.WaitAsync();
         }
 
         public void Release(TSubject subject)
         {
-            var semaphore = GetSemaphore(subject);
+            var semaphore = GetSemaphoreForReduction(subject);
 
             semaphore.Release();
         }
 
-        private SemaphoreSlim GetSemaphore(TSubject subject)
+        private SemaphoreSlim GetSemaphoreForReduction(TSubject subject)
         {
             var reducedSubject = _subjectReductionMap.Invoke(subject);
 
