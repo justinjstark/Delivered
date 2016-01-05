@@ -118,18 +118,18 @@ MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
 
 In this example, FTP deliveries to the same host and port are limited to single concurrency. This would, however, not limit simultaneous deliveries to the same host on two different ports, or to different hosts on the same port.
 
-Multiple `MaximumConcurrentDeliveries` can be specified. For instance:
+Multiple `MaximumConcurrentDeliveries` can be specified allowing for great flexibility in coordinating deliveries. For instance:
 
 ```C#
 MaximumConcurrentDeliveries(5);
 MaximumConcurrentDeliveries(e => e.Host, 3);
 MaximumConcurrentDeliveries(e =>
 {
-    if (e.Port == 22)
+    if (e.Host == "reallyslowserver.com")
         return 1;
     else
         return e;
 }, 1);
 ```
 
-In this example, there can be at most five concurrent FTP deliveries. All FTP deliveries to the same host will be limited to three concurrent deliveries. Any delivery on port 22 will be limited to one concurrent delivery.
+In this example, there will be at most five concurrent FTP deliveries. All deliveries to the same host will be limited to three concurrent deliveries. All deliveries to `reallyslowserver.com` will be limited to one concurrent delivery.
