@@ -37,7 +37,7 @@ public class FtpEndpointRepository : IEndpointRepository<Vendor>
 {
     public IEnumerable<Endpoint> GetEndpointsForRecipient(Vendor vendor)
     {
-        //Get the vendor's FTP endpoints
+        //Get the FTP endpoints for the vendor
     }
 }
 ```
