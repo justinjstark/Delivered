@@ -22,6 +22,7 @@ public class File : Distributable
 public class Vendor : Recipient
 {
     public string Name;
+    public int Port;
 }
 
 public class FtpEndpoint : Endpoint
@@ -63,3 +64,56 @@ distributor.RegisterEndpointDeliveryService(new FtpDeliveryService());
 
 distributor.DistributeAsync(someFile, someVendor).Wait();
 ```
+
+## Concurrency
+
+When endpoint delivery services are implemented asynchronously (ex: using [FtpClient.Async](https://github.com/rkttu/System.Net.FtpClient.Async)), the deliveries will be performed asynchronously.
+
+```C#
+var task1 = distributor.DistributeAsync(someFile1, someVendor);
+var task2 = distributor.DistributeAsync(someFile2, someVendor);
+Task.WaitAll(task1, task2);
+```
+
+Verdeler offers concurrency limitation functionality. There are two places where the maximum concurrency level can be specified.
+
+**1. Distributor Concurrency Limitation**
+
+You can limit the number of concurrent deliveries at the distributor-level.
+
+```C#
+distributor.MaximumConcurrentDeliveries(3)
+distributor.DistributeAsync(someFile, someVendor).Wait();
+```
+
+This will limit the overall concurrent deliveries to three regardless of which endpoint delivery service is used.
+
+**2. Endpoint Delivery Service Concurrency Limitation**
+
+You can also limit the number of concurrent deliveries for each endpoint delivery service.
+
+```C#
+public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
+{
+    public FtpDeliveryService()
+    {
+        MaximumConcurrentDeliveries(3);
+        MaximumConcurrentDeliveries(e => e.Host, 1);
+    }
+    
+    public override async Task DoDeliveryAsync(File file, FtpEndpoint ftpEndpoint)
+    {
+        //Deliver the file to the FTP endpoint
+    }
+}
+```
+
+This will limit the number of concurrent deliveries using FtpDeliveryService to three, but will limit concurrency to one delivery at a time per host. This is useful if you don't want to overly tax a receiving server.
+
+The `MaximumConcurrentDeliveries` with two arguments takes a function with an `Endpoint` parameter and an `object` return. All endpoints are grouped according to the reduction function and concurrency limitation is applied to each group using `.Equals`. This allows for more complex concurrency limitation such as:
+
+```C#
+MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
+```
+
+In this example, concurrent deliveries per host and port are limited to one. This would, however, allow two simultaneous deliveries to the same host on two different ports.
