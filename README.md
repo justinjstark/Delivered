@@ -116,4 +116,4 @@ The `MaximumConcurrentDeliveries` with two arguments takes a function with an `E
 MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
 ```
 
-In this example, concurrent deliveries per host and port are limited to one. This would, however, allow two simultaneous deliveries to the same host on two different ports.
+In this example, FTP deliveries to the same host and port are limited to single concurrency. This would, however, not limit simultaneous deliveries to the same host on two different ports, or to different hosts on the same port.
