@@ -110,7 +110,7 @@ public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
 
 This will limit the number of concurrent deliveries using FtpDeliveryService to three, but will limit concurrency to one delivery at a time per host. This is useful if you don't want to overly tax a receiving server.
 
-The `MaximumConcurrentDeliveries` with two arguments takes a function with an `Endpoint` parameter and an `object` return. All endpoints are grouped according to the reduction function and concurrency limitation is applied to each group using `.Equals`. This allows for more complex concurrency limitation such as:
+The `MaximumConcurrentDeliveries` with two arguments takes a function with an `Endpoint` parameter and an `object` return. All endpoints are grouped according to the reduction function and `.Equals`. Concurrency limitation is applied to each group. This allows for more complex concurrency limitation such as:
 
 ```C#
 MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
