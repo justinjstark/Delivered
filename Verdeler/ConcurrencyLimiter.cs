@@ -29,7 +29,7 @@ namespace Verdeler
         {
             var semaphore = GetSemaphoreForReducedSubject(subject);
 
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync().ConfigureAwait(false);
         }
 
         public void Release(TSubject subject)

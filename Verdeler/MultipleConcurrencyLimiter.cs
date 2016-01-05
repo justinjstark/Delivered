@@ -20,7 +20,7 @@ namespace Verdeler
             //NOTE: This cannot be replaced with a Linq .ForEach
             foreach (var cl in _concurrencyLimiters)
             {
-                await cl.WaitFor(subject);
+                await cl.WaitFor(subject).ConfigureAwait(false);
             }
 
             try
