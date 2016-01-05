@@ -10,7 +10,7 @@ Verdeler is designed to coordinate the delivery of files or other custom distrib
 
 ## Setup
 
-**1. Define a type of distributable**
+**1. Define a distributable, recipient, and endpoint(s)**
 
 ```C#
 public class File : Distributable
@@ -18,30 +18,22 @@ public class File : Distributable
     public string Name;
     public byte[] Contents;
 }
-```
 
-**2. Define a type of recipient**
-
-```C#
 public class Vendor : Recipient
 {
     public string Name;
 }
-```
 
-**3. Define a type of endpoint**
-
-```C#
 public class FtpEndpoint : Endpoint
 {
     public string Host;
 }
 ```
 
-**4. Define an endpoint repository**
+**2. Define a repository to retrieve endpoints for a recipient**
 
 ```C#
-public class FtpEndpointRepository : IEndpointRepository<FtpEndpoint>
+public class FtpEndpointRepository : IEndpointRepository<Vendor>
 {
     public IEnumerable<Endpoint> GetEndpointsForRecipient(Vendor vendor)
     {
@@ -50,7 +42,7 @@ public class FtpEndpointRepository : IEndpointRepository<FtpEndpoint>
 }
 ```
 
-**5. Define an endpoint delivery service**
+**3. Define an endpoint delivery service that sends the distributable to the endpoint**
 
 ```C#
 public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
@@ -62,16 +54,12 @@ public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
 }
 ```
 
-**6. Register the repository and delivery service with the distributor**
+**4. Register the repository and delivery service with the distributor and run the distributor**
 
 ```C#
 var distributor = new Distributor<File, Vendor>();
 distributor.RegisterEndpointRepository(new FtpEndpointRepository());
 distributor.RegisterEndpointDeliveryService(new FtpDeliveryService());
-```
 
-**7. Run the distributor**
-
-```C#
 distributor.DistributeAsync(someFile, someVendor).Wait();
 ```
