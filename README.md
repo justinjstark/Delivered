@@ -83,8 +83,6 @@ Verdeler offers concurrency limitation functionality. There are two places where
 
 **1. Distributor Concurrency Limitation**
 
-You can limit the number of concurrent deliveries at the distributor-level.
-
 ```C#
 distributor.MaximumConcurrentDeliveries(3)
 distributor.DistributeAsync(someFile, someVendor).Wait();
@@ -93,8 +91,6 @@ distributor.DistributeAsync(someFile, someVendor).Wait();
 This will limit the overall concurrent deliveries to three regardless of which endpoint delivery service is used.
 
 **2. Endpoint Delivery Service Concurrency Limitation**
-
-You can also limit the number of concurrent deliveries for each endpoint delivery service.
 
 ```C#
 public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
@@ -114,7 +110,7 @@ public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
 
 This will limit the number of all concurrent deliveries using `FtpDeliveryService` to three, but will limit concurrent deliveries per host to one. This is useful if you don't want to overly tax a receiving server.
 
-The second `MaximumConcurrentDeliveries` in the previous example takes a function with an `Endpoint` parameter and an `object` return. All endpoints are grouped according to the reduction function and `.Equals`. Concurrency limitation is applied to each group. This allows for more complex concurrency limitation such as:
+The second `MaximumConcurrentDeliveries` in the previous example takes a grouping function with an `Endpoint` parameter and an `object` return. All endpoints are grouped according to the grouping function and `.Equals`. Concurrency limitation is applied to each group. This allows for more complex concurrency limitation such as:
 
 ```C#
 MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
@@ -122,7 +118,7 @@ MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
 
 In this example, FTP deliveries to the same host and port are limited to single concurrency. This would, however, not limit simultaneous deliveries to the same host on two different ports, or to different hosts on the same port.
 
-Multiple `MaximumConcurrentDeliveries` can be specified allowing for great flexibility in coordinating deliveries. For instance:
+Multiple `MaximumConcurrentDeliveries` can be specified allowing for great flexibility in coordinating deliveries.
 
 ```C#
 MaximumConcurrentDeliveries(5);
