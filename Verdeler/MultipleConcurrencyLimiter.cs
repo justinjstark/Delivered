@@ -17,10 +17,10 @@ namespace Verdeler
 
         public async Task Do(Func<Task> asyncFunc, TSubject subject)
         {
-            //NOTE: This cannot be replaced with a Linq .ForEach
-            foreach (var cl in _concurrencyLimiters)
+            //We must obtain locks in order to prevent cycles from forming.
+            foreach (var concurrencyLimiter in _concurrencyLimiters)
             {
-                await cl.WaitFor(subject).ConfigureAwait(false);
+                await concurrencyLimiter.WaitFor(subject).ConfigureAwait(false);
             }
 
             try
@@ -29,7 +29,7 @@ namespace Verdeler
             }
             finally
             {
-                //Release in the reverse order to prevent deadlocks
+                //Release in reverse order
                 _concurrencyLimiters
                     .AsEnumerable().Reverse().ToList()
                     .ForEach(l => l.Release(subject));
