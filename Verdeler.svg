@@ -14,7 +14,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="Logo3.svg"
+   inkscape:export-filename="/home/justinjstark/Dropbox/Verdeler Logo/Logo3.png"
+   inkscape:export-xdpi="438.75"
+   inkscape:export-ydpi="438.75">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -32,9 +35,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6"
-     inkscape:cx="-7.4991283"
-     inkscape:cy="7.1890208"
+     inkscape:zoom="11.313709"
+     inkscape:cx="25.965054"
+     inkscape:cy="9.9926759"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -71,27 +74,20 @@
      id="layer1"
      transform="translate(0,-1020.3622)">
     <rect
-       style="fill:#000000;stroke:none"
+       style="fill:#333333;stroke:none"
        id="rect2991"
        width="32"
        height="32"
        x="0"
-       y="0"
-       transform="translate(0,1020.3622)"
+       y="1020.3622"
        ry="0" />
     <path
-       style="fill:#000000;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="M 16,3 28,10 16,17 4,10 z"
+       style="fill:none;stroke:#ffffff;stroke-width:1.75;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 16,3 28.23,10 16,17 3.77,10 z"
        id="path3053"
        inkscape:connector-curvature="0"
        transform="translate(0,1020.3622)"
        sodipodi:nodetypes="ccccc" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 2,12 C 1.943634,11.93232 1.8872677,11.864633 2,12 z"
-       id="path3055"
-       inkscape:connector-curvature="0"
-       transform="translate(0,1020.3622)" />
     <path
        style="fill:#ff5555;stroke:none"
        d="m 16,30 14,-8 0,-9 -14,8"
