@@ -29,19 +29,31 @@ namespace Verdeler
         {
             var semaphore = GetSemaphoreForReducedSubject(subject);
 
-            await semaphore.WaitAsync().ConfigureAwait(false);
+            if (semaphore == null)
+            {
+                await Task.FromResult(0);
+            }
+            else
+            {
+                await semaphore.WaitAsync().ConfigureAwait(false);
+            }
         }
 
         public void Release(TSubject subject)
         {
             var semaphore = GetSemaphoreForReducedSubject(subject);
 
-            semaphore.Release();
+            semaphore?.Release();
         }
 
         private SemaphoreSlim GetSemaphoreForReducedSubject(TSubject subject)
         {
             var reducedSubject = _subjectReductionMap.Invoke(subject);
+
+            if (reducedSubject == null)
+            {
+                return null;
+            }
 
             var semaphore = _semaphores.GetOrAdd(reducedSubject, new SemaphoreSlim(_concurrencyLimit));
 
