@@ -17,20 +17,27 @@ namespace Verdeler
 
         public async Task Do(Func<Task> asyncFunc, TSubject subject)
         {
-            //We must obtain locks in order to prevent cycles from forming.
-            foreach (var concurrencyLimiter in _concurrencyLimiters)
-            {
-                await concurrencyLimiter.WaitFor(subject).ConfigureAwait(false);
-            }
+            //Track which concurrency limiters have been entered in case of exception
+            var concurrencyLimitersEntered = new List<ConcurrencyLimiter<TSubject>>();
 
             try
             {
+                //We must obtain locks in order to prevent cycles from forming
+                foreach (var concurrencyLimiter in _concurrencyLimiters)
+                {
+                    var task = concurrencyLimiter.WaitFor(subject);
+
+                    concurrencyLimitersEntered.Add(concurrencyLimiter);
+
+                    await task.ConfigureAwait(false);
+                }
+
                 await asyncFunc().ConfigureAwait(false);
             }
             finally
             {
                 //Release in reverse order
-                _concurrencyLimiters
+                concurrencyLimitersEntered
                     .AsEnumerable().Reverse().ToList()
                     .ForEach(l => l.Release(subject));
             }
