@@ -10,9 +10,9 @@ namespace Verdeler
         private readonly List<ConcurrencyLimiter<TSubject>> _concurrencyLimiters =
             new List<ConcurrencyLimiter<TSubject>>();
 
-        public void AddConcurrencyLimiter(Func<TSubject, object> reductionMap, int number)
+        public void AddConcurrencyLimiter(Func<TSubject, object> groupingFunc, int number)
         {
-            _concurrencyLimiters.Add(new ConcurrencyLimiter<TSubject>(reductionMap, number));
+            _concurrencyLimiters.Add(new ConcurrencyLimiter<TSubject>(groupingFunc, number));
         }
 
         public async Task Do(Func<Task> asyncFunc, TSubject subject)

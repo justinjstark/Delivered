@@ -21,9 +21,9 @@ namespace Verdeler
             _multipleConcurrencyLimiter.AddConcurrencyLimiter(e => 184204872305603, number);
         }
 
-        public void MaximumConcurrentDeliveries(Func<TEndpoint, object> reductionMap, int number)
+        public void MaximumConcurrentDeliveries(Func<TEndpoint, object> groupingFunc, int number)
         {
-            _multipleConcurrencyLimiter.AddConcurrencyLimiter(reductionMap, number);
+            _multipleConcurrencyLimiter.AddConcurrencyLimiter(groupingFunc, number);
         }
 
         public abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);

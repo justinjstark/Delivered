@@ -7,27 +7,27 @@ namespace Verdeler
 {
     internal class ConcurrencyLimiter<TSubject>
     {
-        private readonly Func<TSubject, object> _subjectReductionMap;
+        private readonly Func<TSubject, object> _groupingFunc;
 
         private readonly int _concurrencyLimit;
 
         private readonly ConcurrentDictionary<object, SemaphoreSlim> _semaphores
             = new ConcurrentDictionary<object, SemaphoreSlim>();
 
-        public ConcurrencyLimiter(Func<TSubject, object> subjectReductionMap, int concurrencyLimit)
+        public ConcurrencyLimiter(Func<TSubject, object> groupingFunc, int concurrencyLimit)
         {
             if (concurrencyLimit <= 0)
             {
                 throw new ArgumentException(@"Concurrency limit must be greater than 0.", nameof(concurrencyLimit));
             }
 
-            _subjectReductionMap = subjectReductionMap;
+            _groupingFunc = groupingFunc;
             _concurrencyLimit = concurrencyLimit;
         }
 
         public async Task WaitFor(TSubject subject)
         {
-            var semaphore = GetSemaphoreForReducedSubject(subject);
+            var semaphore = GetSemaphoreForGroup(subject);
 
             if (semaphore == null)
             {
@@ -41,14 +41,14 @@ namespace Verdeler
 
         public void Release(TSubject subject)
         {
-            var semaphore = GetSemaphoreForReducedSubject(subject);
+            var semaphore = GetSemaphoreForGroup(subject);
 
             semaphore?.Release();
         }
 
-        private SemaphoreSlim GetSemaphoreForReducedSubject(TSubject subject)
+        private SemaphoreSlim GetSemaphoreForGroup(TSubject subject)
         {
-            var reducedSubject = _subjectReductionMap.Invoke(subject);
+            var reducedSubject = _groupingFunc.Invoke(subject);
 
             if (reducedSubject == null)
             {
