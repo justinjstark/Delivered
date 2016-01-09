@@ -128,8 +128,10 @@ MaximumConcurrentDeliveries(e =>
     if (e.Host == "reallyslowserver.com")
         return 1;
     else
-        return e;
+        return null;
 }, 1);
 ```
 
 In this example, there will be at most five concurrent FTP deliveries. All deliveries to the same host will be limited to three concurrent deliveries. All deliveries to `reallyslowserver.com` will be limited to one concurrent delivery.
+
+Grouping to null will exclude endpoints from the concurrency limitation. In the previous example, a delivery to a host other than `reallyslowserver.com` will be limited to five concurrent deliveries and three to the same host but will be unaffected by the third limitation.
