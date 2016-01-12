@@ -1,9 +1,9 @@
 ﻿using System;
-using Demo.Endpoints.FileSystem;
-using Demo.Endpoints.Sharepoint;
+using DemoDistributor.Endpoints.FileSystem;
+using DemoDistributor.Endpoints.Sharepoint;
 using Verdeler;
 
-namespace Demo
+namespace DemoDistributor
 {
     internal class Program
     {
@@ -11,11 +11,11 @@ namespace Demo
         {
             //Configure the distributor
             var distributor = new Distributor<DistributableFile, Vendor>();
-            //distributor.RegisterEndpointRepository(new FileSystemEndpointRepository());
+            distributor.RegisterEndpointRepository(new FileSystemEndpointRepository());
             distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
-            //distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
+            distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
             distributor.RegisterEndpointDeliveryService(new SharepointDeliveryService());
-            //distributor.MaximumConcurrentDeliveries(1);
+            distributor.MaximumConcurrentDeliveries(3);
             
             //Distribute a file to a vendor
             try

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Verdeler;
 
-namespace Demo.Endpoints.FileSystem
+namespace DemoDistributor.Endpoints.FileSystem
 {
     public class FileSystemEndpointRepository : IEndpointRepository<Vendor>
     {

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DemoDistributor;
 using Verdeler;
 
-namespace Demo.Endpoints.Sharepoint
+namespace DemoDistributor.Endpoints.Sharepoint
 {
     public class SharepointDeliveryService : EndpointDeliveryService<DistributableFile, SharepointEndpoint>
     {

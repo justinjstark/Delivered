@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Verdeler;
 
-namespace Demo.Endpoints.Sharepoint
+namespace DemoDistributor.Endpoints.Sharepoint
 {
     public class SharepointEndpointRepository : IEndpointRepository<Vendor>
     {

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DemoDistributor;
+using DemoDistributor.Endpoints.FileSystem;
 using Verdeler;
 
-namespace Demo.Endpoints.FileSystem
+namespace DemoDistributor.Endpoints.FileSystem
 {
     public class FileSystemDeliveryService : EndpointDeliveryService<DistributableFile, FileSystemEndpoint>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Verdeler;
 
-namespace Demo.Endpoints.FileSystem
+namespace DemoDistributor.Endpoints.FileSystem
 {
     public class FileSystemEndpoint : Endpoint
     {

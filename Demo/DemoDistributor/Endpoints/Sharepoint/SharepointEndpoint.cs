@@ -1,7 +1,7 @@
 ﻿using System;
 using Verdeler;
 
-namespace Demo.Endpoints.Sharepoint
+namespace DemoDistributor.Endpoints.Sharepoint
 {
     public class SharepointEndpoint : Endpoint
     {

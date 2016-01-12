@@ -1,6 +1,6 @@
 ﻿using Verdeler;
 
-namespace Demo
+namespace DemoDistributor
 {
     public class Vendor : Recipient
     {
