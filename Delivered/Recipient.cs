@@ -1,4 +1,4 @@
-﻿namespace Verdeler
+﻿namespace Delivered
 {
     public abstract class Recipient
     {

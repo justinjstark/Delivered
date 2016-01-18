@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DemoDistributor;
 using DemoDistributor.Endpoints.FileSystem;
-using Verdeler;
+using Delivered;
 
 namespace DemoDistributor.Endpoints.FileSystem
 {

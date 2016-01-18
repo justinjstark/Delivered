@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Verdeler
+namespace Delivered
 {
     public interface IEndpointRepository<in TRecipient> where TRecipient : Recipient
     {

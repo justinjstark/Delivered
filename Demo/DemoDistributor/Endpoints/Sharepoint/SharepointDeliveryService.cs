@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DemoDistributor;
-using Verdeler;
+using Delivered;
 
 namespace DemoDistributor.Endpoints.Sharepoint
 {

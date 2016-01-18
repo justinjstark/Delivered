@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Verdeler
+namespace Delivered
 {
     public class Distributor<TDistributable, TRecipient> : IDistributor<TDistributable, TRecipient>
         where TDistributable : Distributable

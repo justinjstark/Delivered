@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Verdeler
+namespace Delivered
 {
     public interface IDistributor<in TDistributable, in TRecipient>
         where TDistributable : Distributable

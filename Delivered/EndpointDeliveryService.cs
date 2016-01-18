@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Verdeler
+namespace Delivered
 {
     public abstract class EndpointDeliveryService<TDistributable, TEndpoint>
         : IEndpointDeliveryService<TDistributable, TEndpoint>

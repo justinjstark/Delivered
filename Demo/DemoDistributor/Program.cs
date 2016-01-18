@@ -1,7 +1,7 @@
 ﻿using System;
 using DemoDistributor.Endpoints.FileSystem;
 using DemoDistributor.Endpoints.Sharepoint;
-using Verdeler;
+using Delivered;
 
 namespace DemoDistributor
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Verdeler;
+using Delivered;
 
 namespace DemoDistributor.Endpoints.FileSystem
 {
