@@ -1,16 +1,12 @@
-![Logo](https://raw.githubusercontent.com/justinjstark/Verdeler/master/Verdeler.png)
-
-# Verdeler
+![Delivered Logo](https://raw.githubusercontent.com/justinjstark/Verdeler/master/Delivered.png)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/bc2sduxl2rjwehyo?svg=true)](https://ci.appveyor.com/project/justinjstark/verdeler) [![MIT license](https://img.shields.io/github/license/justinjstark/verdeler.svg)](https://img.shields.io/github/license/justinjstark/verdeler.svg)
-
-(vur-**dey**-ler)
 
 A .NET distribution framework supporting custom distributables and endpoints.
 
 ## How It Works
 
-Verdeler is designed to coordinate the delivery of files or other custom distributables to recipient endpoints. It is possible for one recipient to have multiple endpoints of various types (FTP, Sharepoint, Web Service, etc). Once Verdeler is configured, calling the `Distribute(distributable, recipient)` method will send the distributable to all endpoints associated with the recipient. Verdeler chooses which endpoint delivery service(s) to use based on the type of the endpoint returned from the registered endpoint repositories.
+Delivered is designed to coordinate the delivery of files or other custom distributables to recipient endpoints. It is possible for one recipient to have multiple endpoints of various types (FTP, Sharepoint, Web Service, etc). Once configured, calling the `Distribute(distributable, recipient)` method will send the distributable to all endpoints associated with the recipient. Delivered chooses which endpoint delivery service(s) to use based on the type of the endpoint returned from the registered endpoint repositories.
 
 ## Setup
 
@@ -79,7 +75,7 @@ var task2 = distributor.DistributeAsync(someFile2, someVendor);
 Task.WaitAll(task1, task2);
 ```
 
-Verdeler offers concurrency limitation functionality. There are two places where the maximum concurrency level can be specified.
+Delivered offers concurrency limitation functionality. There are two places where the maximum concurrency level can be specified.
 
 **1. Distributor Concurrency Limitation**
 
