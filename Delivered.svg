@@ -5,47 +5,30 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   width="295.12451"
-   height="68.245941"
-   viewBox="0 0 78.08502 18.056739"
+   id="svg8"
    version="1.1"
-   id="svg8">
-  <defs
-     id="defs2" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     id="layer1"
-     transform="translate(-1.9467563,-277.0341)">
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:14.49148178px;line-height:125%;font-family:ori1Uni;-inkscape-font-specification:'ori1Uni Medium';letter-spacing:0px;word-spacing:0px;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.36228707px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="18.932121"
-       y="291.21625"
-       id="text939"><tspan
-         id="tspan937"
-         x="18.932121"
-         y="291.21625"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Patua One';-inkscape-font-specification:'Patua One';word-spacing:0px;fill:#000000;stroke-width:0.36228707px"
-         dx="0 -0.16640717 0 0.066562876 0 -0.39937726 0 -0.066562876">Delivered</tspan></text>
-    <path
-       style="opacity:1;fill:#aa0000;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
-       id="path4226"
-       d="m 8.8645832,293.56696 -5.3740767,-3.10273 a 1.5000001,1.5000001 59.999998 0 1 -0.75,-1.29904 l -2e-7,-6.20544 a 1.5,1.5 120 0 1 0.75,-1.29904 l 5.3740765,-3.10273 a 1.5,1.5 -180 0 1 1.5000002,0 l 5.374077,3.10273 a 1.5000001,1.5000001 59.999998 0 1 0.75,1.29903 v 6.20545 a 1.5,1.5 120 0 1 -0.75,1.29904 l -5.374077,3.10273 a 1.5,1.5 -180 0 1 -1.4999998,0 z"
-       transform="translate(0.52916665)" />
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.58749998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 8.6089001,285.17633 1.5348499,0.88615 3.578451,-2.06602"
-       id="path4228" />
-  </g>
+   viewBox="0 0 78.08502 18.056739"
+   height="68.245941"
+   width="295.12451">
+  <text
+     id="DeliveredTextContainer"
+     y="14.18215"
+     x="16.9853647"
+     style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:14.49148178px;line-height:125%;font-family:ori1Uni;-inkscape-font-specification:'ori1Uni Medium';letter-spacing:0px;word-spacing:0px;opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.36228707px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     xml:space="preserve">
+     <tspan
+       dx="0 -0.16640717 0 0.066562876 0 -0.39937726 0 -0.066562876"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Patua One';-inkscape-font-specification:'Patua One';word-spacing:0px;fill:#000000;stroke-width:0.36228707px"
+       y="14.18215"
+       x="16.9853647"
+       id="DeliveredText">Delivered</tspan>
+  </text>
+  <path
+     id="Hexagon"
+     d="m 7.44699355,16.53286 -5.3740767,-3.10273 a 1.5000001,1.5000001 59.999998 0 1 -0.75,-1.29904 l -2e-7,-6.20544 a 1.5,1.5 120 0 1 0.75,-1.29904 l 5.3740765,-3.10273 a 1.5,1.5 -180 0 1 1.5000002,0 l 5.374077,3.10273 a 1.5000001,1.5000001 59.999998 0 1 0.75,1.29903 v 6.20545 a 1.5,1.5 120 0 1 -0.75,1.29904 l -5.374077,3.10273 a 1.5,1.5 -180 0 1 -1.4999998,0 z"
+     style="opacity:1;fill:#aa0000;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+  <path
+     id="Check"
+     d="m 6.6621438,8.14223 1.5348499,0.88615 3.578451,-2.06602"
+     style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.58749998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
 </svg>
