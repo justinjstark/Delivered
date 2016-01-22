@@ -7,12 +7,7 @@ namespace Delivered
         Task DeliverAsync(Distributable disributable, Endpoint endpoint);
     }
 
-    public interface IEndpointDeliveryService<in TEndpoint> : IEndpointDeliveryService
-    {
-        Task DeliverAsync(Distributable distributable, TEndpoint endpoint, Recipient recipient);
-    }
-
-    public interface IEndpointDeliveryService<in TDistributable, in TEndpoint> : IEndpointDeliveryService<TEndpoint>
+    public interface IEndpointDeliveryService<in TDistributable, in TEndpoint> : IEndpointDeliveryService
         where TDistributable : Distributable
         where TEndpoint : Endpoint
     {

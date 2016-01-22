@@ -35,7 +35,7 @@ namespace Delivered
             }
         }
 
-        public void RegisterEndpointDeliveryService<TEndpoint>(IEndpointDeliveryService<TEndpoint> endpointDeliveryService)
+        public void RegisterEndpointDeliveryService<TEndpoint>(IEndpointDeliveryService<TDistributable, TEndpoint> endpointDeliveryService)
             where TEndpoint : Endpoint
         {
             _endpointDeliveryServices[typeof(TEndpoint)] = endpointDeliveryService;
