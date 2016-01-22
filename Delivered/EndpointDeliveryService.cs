@@ -28,7 +28,7 @@ namespace Delivered
 
         public abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);
 
-        public async Task DeliverAsync(TDistributable distributable, TEndpoint endpoint, Recipient recipient)
+        public async Task DeliverAsync(TDistributable distributable, TEndpoint endpoint)
         {
             await _multipleConcurrencyLimiter.Do(async () =>
             {
@@ -36,14 +36,14 @@ namespace Delivered
             }, endpoint);
         }
 
-        public async Task DeliverAsync(Distributable distributable, TEndpoint endpoint, Recipient recipient)
+        public async Task DeliverAsync(Distributable distributable, TEndpoint endpoint)
         {
-            await DeliverAsync((TDistributable) distributable, endpoint, recipient).ConfigureAwait(false);
+            await DeliverAsync((TDistributable) distributable, endpoint).ConfigureAwait(false);
         }
 
-        public async Task DeliverAsync(Distributable distributable, Endpoint endpoint, Recipient recipient)
+        public async Task DeliverAsync(Distributable distributable, Endpoint endpoint)
         {
-            await DeliverAsync((TDistributable) distributable, (TEndpoint) endpoint, recipient).ConfigureAwait(false);
+            await DeliverAsync((TDistributable) distributable, (TEndpoint) endpoint).ConfigureAwait(false);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Delivered
                 {
                     var endpointDeliveryService = _endpointDeliveryServices[endpoint.GetType()];
 
-                    var deliveryTask = DeliverAsync(endpointDeliveryService, distributable, endpoint, recipient);
+                    var deliveryTask = DeliverAsync(endpointDeliveryService, distributable, endpoint);
                     deliveryTasks.Add(deliveryTask);
                 }
             }
@@ -77,7 +77,7 @@ namespace Delivered
         }
 
         private async Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService,
-            TDistributable distributable, Endpoint endpoint, Recipient recipient)
+            TDistributable distributable, Endpoint endpoint)
         {
             if (_semaphore != null)
             {
@@ -86,7 +86,7 @@ namespace Delivered
 
             try
             {
-                await endpointDeliveryService.DeliverAsync(distributable, endpoint, recipient).ConfigureAwait(false);
+                await endpointDeliveryService.DeliverAsync(distributable, endpoint).ConfigureAwait(false);
             }
             finally
             {

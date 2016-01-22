@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DemoDistributor;
-using DemoDistributor.Endpoints.FileSystem;
 using Delivered;
 
 namespace DemoDistributor.Endpoints.FileSystem
