@@ -51,7 +51,12 @@ namespace Delivered
 
                 foreach (var endpoint in endpoints)
                 {
-                    var endpointDeliveryService = _endpointDeliveryServices[endpoint.GetType()];
+                    IEndpointDeliveryService endpointDeliveryService;
+                    if (!_endpointDeliveryServices.TryGetValue(endpoint.GetType(), out endpointDeliveryService))
+                    {
+                        throw new InvalidOperationException(
+                            $"No endpoint delivery service registered for endpoint type {endpoint.GetType()}");
+                    }
 
                     var deliveryTask = DeliverAsync(endpointDeliveryService, distributable, endpoint);
                     deliveryTasks.Add(deliveryTask);
