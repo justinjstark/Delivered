@@ -46,9 +46,9 @@ public class FtpEndpointRepository : IEndpointRepository<Vendor>
 **3. Define an endpoint delivery service that sends the distributable to the endpoint**
 
 ```C#
-public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
+public class FtpDeliveryService : IEndpointDeliveryService<File, FtpEndpoint>
 {
-    public override async Task DoDeliveryAsync(File file, FtpEndpoint ftpEndpoint)
+    public async Task DeliverAsync(File file, FtpEndpoint ftpEndpoint)
     {
         //Deliver the file to the FTP endpoint
     }
@@ -88,8 +88,10 @@ This will limit the overall concurrent deliveries to three regardless of which e
 
 **2. Endpoint Delivery Service Concurrency Limitation**
 
+An abstract class `ConcurrencyLimitedEndpointDeliveryService` is provided that offers concurrency limitation for an endpoint delivery service.
+
 ```C#
-public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
+public class FtpDeliveryService : ConcurrencyLimitedEndpointDeliveryService<File, FtpEndpoint>
 {
     public FtpDeliveryService()
     {
@@ -106,7 +108,7 @@ public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
 
 This will limit the number of all concurrent deliveries using `FtpDeliveryService` to three, but will limit concurrent deliveries per host to one. This is useful if you don't want to overly tax a receiving server.
 
-The second `MaximumConcurrentDeliveries` in the previous example takes a grouping function with an `Endpoint` parameter and an `object` return. All endpoints are grouped according to the grouping function and `.Equals`. Concurrency limitation is applied to each group. This allows for more complex concurrency limitation such as:
+The second `MaximumConcurrentDeliveries` in the previous example takes a grouping function with an `IEndpoint` parameter and an `object` return. All endpoints are grouped according to the grouping function and `.Equals`. Concurrency limitation is applied to each group. This allows for more complex concurrency limitation such as:
 
 ```C#
 MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
