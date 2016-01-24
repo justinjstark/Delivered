@@ -5,7 +5,7 @@ using Delivered;
 
 namespace DemoDistributor.Endpoints.Sharepoint
 {
-    public class SharepointDeliveryService : EndpointDeliveryService<DistributableFile, SharepointEndpoint>
+    public class SharepointDeliveryService : ConcurrencyLimitedEndpointDeliveryService<DistributableFile, SharepointEndpoint>
     {
         public SharepointDeliveryService()
         {

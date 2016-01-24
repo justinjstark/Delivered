@@ -4,7 +4,7 @@ using Delivered;
 
 namespace DemoDistributor.Endpoints.FileSystem
 {
-    public class FileSystemDeliveryService : EndpointDeliveryService<DistributableFile, FileSystemEndpoint>
+    public class FileSystemDeliveryService : ConcurrencyLimitedEndpointDeliveryService<DistributableFile, FileSystemEndpoint>
     {
         public FileSystemDeliveryService()
         {

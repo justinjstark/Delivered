@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Delivered
 {
-    public abstract class EndpointDeliveryService<TDistributable, TEndpoint>
+    public abstract class ConcurrencyLimitedEndpointDeliveryService<TDistributable, TEndpoint>
         : IEndpointDeliveryService<TDistributable, TEndpoint>
         where TDistributable : IDistributable
         where TEndpoint : IEndpoint
