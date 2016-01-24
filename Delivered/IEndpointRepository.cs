@@ -2,8 +2,8 @@
 
 namespace Delivered
 {
-    public interface IEndpointRepository<in TRecipient> where TRecipient : Recipient
+    public interface IEndpointRepository<in TRecipient> where TRecipient : IRecipient
     {
-        IEnumerable<Endpoint> GetEndpointsForRecipient(TRecipient recipient);
+        IEnumerable<IEndpoint> GetEndpointsForRecipient(TRecipient recipient);
     }
 }

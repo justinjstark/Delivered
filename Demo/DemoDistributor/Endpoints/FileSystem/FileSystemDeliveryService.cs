@@ -11,7 +11,7 @@ namespace DemoDistributor.Endpoints.FileSystem
             MaximumConcurrentDeliveries(5);
         }
 
-        public override async Task DoDeliveryAsync(DistributableFile file, FileSystemEndpoint endpoint)
+        protected override async Task DoDeliveryAsync(DistributableFile file, FileSystemEndpoint endpoint)
         {
             Console.WriteLine($"Distributing file {file.Name} to File System directory {endpoint.Directory}");
 

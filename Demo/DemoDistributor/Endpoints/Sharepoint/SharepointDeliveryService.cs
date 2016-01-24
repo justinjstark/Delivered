@@ -13,7 +13,7 @@ namespace DemoDistributor.Endpoints.Sharepoint
             MaximumConcurrentDeliveries(2);
         }
 
-        public override async Task DoDeliveryAsync(DistributableFile file, SharepointEndpoint endpoint)
+        protected override async Task DoDeliveryAsync(DistributableFile file, SharepointEndpoint endpoint)
         {
             Console.WriteLine($"Distributing file {file.Name} to Sharepoint URI {endpoint.Uri}");
 

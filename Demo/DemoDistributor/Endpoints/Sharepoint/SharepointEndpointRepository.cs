@@ -7,7 +7,7 @@ namespace DemoDistributor.Endpoints.Sharepoint
 {
     public class SharepointEndpointRepository : IEndpointRepository<Vendor>
     {
-        public IEnumerable<Endpoint> GetEndpointsForRecipient(Vendor vendor)
+        public IEnumerable<IEndpoint> GetEndpointsForRecipient(Vendor vendor)
         {
             Console.WriteLine("Getting SharePoint endpoints");
 

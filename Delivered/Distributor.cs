@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 namespace Delivered
 {
     public class Distributor<TDistributable, TRecipient> : IDistributor<TDistributable, TRecipient>
-        where TDistributable : Distributable
-        where TRecipient : Recipient
+        where TDistributable : IDistributable
+        where TRecipient : IRecipient
     {
         private SemaphoreSlim _semaphore;
 
@@ -36,7 +36,7 @@ namespace Delivered
         }
 
         public void RegisterEndpointDeliveryService<TEndpoint>(IEndpointDeliveryService<TDistributable, TEndpoint> endpointDeliveryService)
-            where TEndpoint : Endpoint
+            where TEndpoint : IEndpoint
         {
             _endpointDeliveryServices[typeof(TEndpoint)] = endpointDeliveryService;
         }
@@ -82,7 +82,7 @@ namespace Delivered
         }
 
         private async Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService,
-            TDistributable distributable, Endpoint endpoint)
+            TDistributable distributable, IEndpoint endpoint)
         {
             if (_semaphore != null)
             {

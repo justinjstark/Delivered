@@ -4,12 +4,12 @@ namespace Delivered
 {
     public interface IEndpointDeliveryService
     {
-        Task DeliverAsync(Distributable disributable, Endpoint endpoint);
+        Task DeliverAsync(IDistributable disributable, IEndpoint endpoint);
     }
 
     public interface IEndpointDeliveryService<in TDistributable, in TEndpoint> : IEndpointDeliveryService
-        where TDistributable : Distributable
-        where TEndpoint : Endpoint
+        where TDistributable : IDistributable
+        where TEndpoint : IEndpoint
     {
         Task DeliverAsync(TDistributable disributable, TEndpoint endpoint);
     }

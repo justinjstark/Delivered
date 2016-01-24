@@ -2,7 +2,7 @@
 
 namespace DemoDistributor
 {
-    public class Vendor : Recipient
+    public class Vendor : IRecipient
     {
         public string Name { get; set; }
     }

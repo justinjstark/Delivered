@@ -43,13 +43,13 @@
     <Compile Include="Concurrency.cs" />
     <Compile Include="Distributor.cs" />
     <Compile Include="EndpointDeliveryService.cs" />
-    <Compile Include="Distributable.cs" />
+    <Compile Include="IDistributable.cs" />
     <Compile Include="IDistributor.cs" />
     <Compile Include="IEndpointDeliveryService.cs" />
-    <Compile Include="Endpoint.cs" />
+    <Compile Include="IEndpoint.cs" />
     <Compile Include="IEndpointRepository.cs" />
     <Compile Include="MultipleConcurrencyLimiter.cs" />
-    <Compile Include="Recipient.cs" />
+    <Compile Include="IRecipient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConcurrencyLimiter.cs" />
   </ItemGroup>

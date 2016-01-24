@@ -3,8 +3,8 @@
 namespace Delivered
 {
     public interface IDistributor<in TDistributable, in TRecipient>
-        where TDistributable : Distributable
-        where TRecipient : Recipient
+        where TDistributable : IDistributable
+        where TRecipient : IRecipient
     {
         Task DistributeAsync(TDistributable distributable, TRecipient recipient);
     }

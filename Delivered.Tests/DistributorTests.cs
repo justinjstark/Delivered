@@ -43,7 +43,7 @@ namespace Delivered.Tests
             
             distributor.DistributeAsync(distributable, recipient).Wait();
 
-            endpointDeliveryService.Verify(eds => eds.DeliverAsync(distributable, (Endpoint) endpoint), Times.Once);
+            endpointDeliveryService.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Once);
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace Delivered.Tests
 
             distributor.DistributeAsync(distributable, recipient).Wait();
 
-            endpointDeliveryService1.Verify(eds => eds.DeliverAsync(distributable, (Endpoint) endpoint), Times.Never);
+            endpointDeliveryService1.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Never);
         }
 
         [Test]
@@ -89,18 +89,18 @@ namespace Delivered.Tests
 
             distributor.DistributeAsync(distributable, recipient).Wait();
             
-            endpointDeliveryService2.Verify(eds => eds.DeliverAsync(distributable, (Endpoint) endpoint), Times.Once);
+            endpointDeliveryService2.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Once);
         }
 
-        public class FakeDistributable : Distributable
+        public class FakeDistributable : IDistributable
         {
         }
 
-        public class FakeRecipient : Recipient
+        public class FakeRecipient : IRecipient
         {
         }
 
-        public class FakeEndpoint : Endpoint
+        public class FakeEndpoint : IEndpoint
         {
         }
     }

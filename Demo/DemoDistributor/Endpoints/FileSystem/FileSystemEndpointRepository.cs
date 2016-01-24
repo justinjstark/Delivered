@@ -7,7 +7,7 @@ namespace DemoDistributor.Endpoints.FileSystem
 {
     public class FileSystemEndpointRepository : IEndpointRepository<Vendor>
     {
-        public IEnumerable<Endpoint> GetEndpointsForRecipient(Vendor vendor)
+        public IEnumerable<IEndpoint> GetEndpointsForRecipient(Vendor vendor)
         {
             Console.WriteLine("Getting file system endpoints");
 

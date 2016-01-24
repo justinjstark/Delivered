@@ -5,8 +5,8 @@ namespace Delivered
 {
     public abstract class EndpointDeliveryService<TDistributable, TEndpoint>
         : IEndpointDeliveryService<TDistributable, TEndpoint>
-        where TDistributable : Distributable
-        where TEndpoint : Endpoint
+        where TDistributable : IDistributable
+        where TEndpoint : IEndpoint
     {
         private readonly MultipleConcurrencyLimiter<TEndpoint> _multipleConcurrencyLimiter =
             new MultipleConcurrencyLimiter<TEndpoint>();
@@ -26,7 +26,7 @@ namespace Delivered
             _multipleConcurrencyLimiter.AddConcurrencyLimiter(groupingFunc, number);
         }
 
-        public abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);
+        protected abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);
 
         public async Task DeliverAsync(TDistributable distributable, TEndpoint endpoint)
         {
@@ -36,12 +36,7 @@ namespace Delivered
             }, endpoint);
         }
 
-        public async Task DeliverAsync(Distributable distributable, TEndpoint endpoint)
-        {
-            await DeliverAsync((TDistributable) distributable, endpoint).ConfigureAwait(false);
-        }
-
-        public async Task DeliverAsync(Distributable distributable, Endpoint endpoint)
+        public async Task DeliverAsync(IDistributable distributable, IEndpoint endpoint)
         {
             await DeliverAsync((TDistributable) distributable, (TEndpoint) endpoint).ConfigureAwait(false);
         }

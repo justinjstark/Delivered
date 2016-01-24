@@ -2,7 +2,7 @@
 
 namespace DemoDistributor
 {
-    public class DistributableFile : Distributable
+    public class DistributableFile : IDistributable
     {
         public string Name { get; set; }
         public byte[] Contents { get; set; }

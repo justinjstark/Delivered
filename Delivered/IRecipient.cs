@@ -1,6 +1,6 @@
 ﻿namespace Delivered
 {
-    public abstract class Recipient
+    public interface IRecipient
     {
     }
 }
