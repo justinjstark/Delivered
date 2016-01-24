@@ -13,19 +13,19 @@ Delivered is designed to coordinate the delivery of files or other custom distri
 **1. Define a distributable, recipient, and endpoint(s)**
 
 ```C#
-public class File : Distributable
+public class File : IDistributable
 {
     public string Name;
     public byte[] Contents;
 }
 
-public class Vendor : Recipient
+public class Vendor : IRecipient
 {
     public string Name;
     public int Port;
 }
 
-public class FtpEndpoint : Endpoint
+public class FtpEndpoint : IEndpoint
 {
     public string Host;
 }
