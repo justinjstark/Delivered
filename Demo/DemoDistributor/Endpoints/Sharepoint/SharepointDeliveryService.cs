@@ -5,7 +5,7 @@ using Delivered;
 
 namespace DemoDistributor.Endpoints.Sharepoint
 {
-    public class SharepointDeliveryService : ConcurrencyLimitedEndpointDeliveryService<DistributableFile, SharepointEndpoint>
+    public class SharepointDeliveryService : ConcurrencyLimitedEndpointDeliveryService<File, SharepointEndpoint>
     {
         public SharepointDeliveryService()
         {
@@ -13,7 +13,7 @@ namespace DemoDistributor.Endpoints.Sharepoint
             MaximumConcurrentDeliveries(2);
         }
 
-        protected override async Task DoDeliveryAsync(DistributableFile file, SharepointEndpoint endpoint)
+        protected override async Task DoDeliveryAsync(File file, SharepointEndpoint endpoint)
         {
             Console.WriteLine($"Distributing file {file.Name} to Sharepoint URI {endpoint.Uri}");
 

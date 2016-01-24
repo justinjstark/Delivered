@@ -10,7 +10,7 @@ namespace DemoDistributor
         private static void Main(string[] args)
         {
             //Configure the distributor
-            var distributor = new Distributor<DistributableFile, Vendor>();
+            var distributor = new Distributor<File, Vendor>();
             distributor.RegisterEndpointRepository(new FileSystemEndpointRepository());
             distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
             distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
@@ -40,7 +40,7 @@ namespace DemoDistributor
             Console.ReadLine();
         }
 
-        private static DistributableFile FakeFile => new DistributableFile
+        private static File FakeFile => new File
         {
             Name = @"test.pdf",
             Contents = new byte[1024]

@@ -4,14 +4,14 @@ using Delivered;
 
 namespace DemoDistributor.Endpoints.FileSystem
 {
-    public class FileSystemDeliveryService : ConcurrencyLimitedEndpointDeliveryService<DistributableFile, FileSystemEndpoint>
+    public class FileSystemDeliveryService : ConcurrencyLimitedEndpointDeliveryService<File, FileSystemEndpoint>
     {
         public FileSystemDeliveryService()
         {
             MaximumConcurrentDeliveries(5);
         }
 
-        protected override async Task DoDeliveryAsync(DistributableFile file, FileSystemEndpoint endpoint)
+        protected override async Task DoDeliveryAsync(File file, FileSystemEndpoint endpoint)
         {
             Console.WriteLine($"Distributing file {file.Name} to File System directory {endpoint.Directory}");
 

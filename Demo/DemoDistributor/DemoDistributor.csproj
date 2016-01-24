@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DistributableFile.cs" />
+    <Compile Include="File.cs" />
     <Compile Include="Endpoints\FileSystem\FileSystemDeliveryService.cs" />
     <Compile Include="Endpoints\FileSystem\FileSystemEndpoint.cs" />
     <Compile Include="Endpoints\FileSystem\FileSystemEndpointRepository.cs" />
