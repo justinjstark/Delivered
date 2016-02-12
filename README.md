@@ -22,12 +22,12 @@ public class File : IDistributable
 public class Vendor : IRecipient
 {
     public string Name;
-    public int Port;
 }
 
 public class FtpEndpoint : IEndpoint
 {
     public string Host;
+    public int Port;
 }
 ```
 
