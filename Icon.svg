@@ -1,0 +1,13 @@
+<svg
+   viewBox="0 0 13.748163 15.410905"
+   height="58.245941"
+   width="51.961563">
+    <path
+       style="opacity:1;fill:#aa0000;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       d="M 6.124083,15.209943 0.75,12.107212 a 1.5000001,1.5000001 0 0 1 -0.75,-1.29904 v -6.20544 a 1.5000001,1.5000001 0 0 1 0.75,-1.29904 l 5.374083,-3.10273 a 1.5,1.5 0 0 1 1.5,0 l 5.37408,3.10273 a 1.5000001,1.5000001 0 0 1 0.75,1.29903 v 6.20545 a 1.5000001,1.5000001 0 0 1 -0.75,1.29904 l -5.37408,3.102731 a 1.5,1.5 0 0 1 -1.5,0 z"
+       id="Hexagon" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.58749998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 5.339233,6.819312 1.53485,0.88615 3.57845,-2.06602"
+       id="Check" />
+</svg>
