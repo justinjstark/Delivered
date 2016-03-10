@@ -4,7 +4,7 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var version = Argument("version", "0.0.0");
+var version = Argument("buildversion", "0.0.0");
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
