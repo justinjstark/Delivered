@@ -18,7 +18,7 @@ namespace Delivered
                 throw new ArgumentException(nameof(number));
             }
 
-            _multipleConcurrencyLimiter.AddConcurrencyLimiter(e => 184204872305603, number);
+            _multipleConcurrencyLimiter.AddConcurrencyLimiter(e => 1842872753, number);
         }
 
         public void MaximumConcurrentDeliveries(Func<TEndpoint, object> groupingFunc, int number)

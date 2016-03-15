@@ -36,10 +36,10 @@ namespace Delivered
             }
             finally
             {
-                //Release in reverse order
-                concurrencyLimitersEntered
-                    .AsEnumerable().Reverse().ToList()
-                    .ForEach(l => l.Release(subject));
+                foreach (var concurrencyLimiterEntered in concurrencyLimitersEntered)
+                {
+                    concurrencyLimiterEntered.Release(subject);
+                }
             }
         }
     }
