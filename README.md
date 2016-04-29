@@ -75,9 +75,9 @@ var task2 = distributor.DistributeAsync(someFile2, someVendor);
 Task.WaitAll(task1, task2);
 ```
 
-Delivered offers concurrency limitation functionality. There are two places where the maximum concurrency level can be specified.
+Delivered offers throttling functionality. There are two places where the maximum concurrency level can be specified.
 
-**1. Distributor Concurrency Limitation**
+**1. Distributor Throttling**
 
 ```C#
 distributor.MaximumConcurrentDeliveries(3)
@@ -86,12 +86,12 @@ distributor.DistributeAsync(someFile, someVendor).Wait();
 
 This will limit the overall concurrent deliveries to three regardless of which endpoint delivery service is used.
 
-**2. Endpoint Delivery Service Concurrency Limitation**
+**2. Endpoint Delivery Service Throttling**
 
-An abstract class `ConcurrencyLimitedEndpointDeliveryService` is provided that offers concurrency limitation for an endpoint delivery service.
+In the `Delivered.Concurrency namespace`, an abstract class `ThrottledEndpointDeliveryService` is provided that offers throttling for an individual endpoint delivery service.
 
 ```C#
-public class FtpDeliveryService : ConcurrencyLimitedEndpointDeliveryService<File, FtpEndpoint>
+public class FtpDeliveryService : ThrottledEndpointDeliveryService<File, FtpEndpoint>
 {
     public FtpDeliveryService()
     {
@@ -99,7 +99,7 @@ public class FtpDeliveryService : ConcurrencyLimitedEndpointDeliveryService<File
         MaximumConcurrentDeliveries(e => e.Host, 1);
     }
 
-    public override async Task DoDeliveryAsync(File file, FtpEndpoint ftpEndpoint)
+    public override async Task DeliverThrottledAsync(File file, FtpEndpoint ftpEndpoint)
     {
         //Deliver the file to the FTP endpoint
     }
@@ -108,7 +108,7 @@ public class FtpDeliveryService : ConcurrencyLimitedEndpointDeliveryService<File
 
 This will limit the number of all concurrent deliveries using `FtpDeliveryService` to three, but will limit concurrent deliveries per host to one. This is useful if you don't want to overly tax a receiving server.
 
-The second `MaximumConcurrentDeliveries` in the previous example takes a grouping function with an `IEndpoint` parameter and an `object` return. All endpoints are grouped according to the grouping function and `.Equals`. Concurrency limitation is applied to each group. This allows for more complex concurrency limitation such as:
+The second `MaximumConcurrentDeliveries` in the previous example takes a grouping function with an `IEndpoint` parameter and an `object` return. All endpoints are grouped according to the grouping function and `.Equals`. Throttling is applied to each group which allows for a more complex appilcation such as:
 
 ```C#
 MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
@@ -132,4 +132,4 @@ MaximumConcurrentDeliveries(e =>
 
 In this example, there will be at most five concurrent FTP deliveries. All deliveries to the same host will be limited to three concurrent deliveries. All deliveries to `reallyslowserver.com` will be limited to one concurrent delivery.
 
-Grouping to null will exclude endpoints from the concurrency limitation. In the previous example, a delivery to a host other than `reallyslowserver.com` will be limited to five concurrent deliveries and three to the same host but will be unaffected by the third limitation.
+Grouping to null will exclude the endpoint from throttling by this group. In the previous example, a delivery to a host other than `reallyslowserver.com` will be limited to five concurrent deliveries and three to the same host but will be unaffected by the third limitation.

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Delivered;
+using Delivered.Concurrency;
 
 namespace DemoDistributor.Endpoints.FileSystem
 {
-    public class FileSystemDeliveryService : ConcurrencyLimitedEndpointDeliveryService<File, FileSystemEndpoint>
+    public class FileSystemDeliveryService : ThrottledEndpointDeliveryService<File, FileSystemEndpoint>
     {
         public FileSystemDeliveryService()
         {
             MaximumConcurrentDeliveries(5);
         }
 
-        protected override async Task DoDeliveryAsync(File file, FileSystemEndpoint endpoint)
+        protected override async Task DeliverThrottledAsync(File file, FileSystemEndpoint endpoint)
         {
             Console.WriteLine($"Distributing file {file.Name} to File System directory {endpoint.Directory}");
 
