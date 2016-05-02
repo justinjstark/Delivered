@@ -9,7 +9,7 @@ namespace Delivered.Tests
     public class DistributorTests
     {
         [Test]
-        public void DeliveringToAnEndpointTypeWithNoDeliveryServiceThrowsAnError()
+        public void DistributeAsync_DeliversToAnEndpointTypeWithNoDeliveryServiceThrowsAnError()
         {
             var distributable = new FakeDistributable();
             var recipient = new FakeRecipient();
@@ -26,7 +26,7 @@ namespace Delivered.Tests
         }
 
         [Test]
-        public void OneDistributableCanBeSentToOneEndpointDeliveryService()
+        public void DistributeAsync_DeliversADistributableToARegisteredEndpointDeliveryService()
         {
             var distributable = new FakeDistributable();
             var recipient = new FakeRecipient();
@@ -47,7 +47,7 @@ namespace Delivered.Tests
         }
 
         [Test]
-        public void WhenTwoEndpointDeliveryServicesAreRegisteredForTheSameEndpointTypeTheFirstIsNotUsed()
+        public void DistributeAsync_DoesNotUseTheFirstEndpointDeliveryServiceWhenTwoAreRegistered()
         {
             var distributable = new FakeDistributable();
             var recipient = new FakeRecipient();
@@ -70,7 +70,7 @@ namespace Delivered.Tests
         }
 
         [Test]
-        public void WhenTwoEndpointDeliveryServicesAreRegisteredForTheSameEndpointTypeTheSecondIsUsed()
+        public void DistributeAsync_UsesTheSecondEndpointDeliveryServiceWhenTwoAreRegistered()
         {
             var distributable = new FakeDistributable();
             var recipient = new FakeRecipient();
