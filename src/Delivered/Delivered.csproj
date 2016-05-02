@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Distributor.cs" />
-    <Compile Include="Concurrency\ThrottledEndpointDeliveryService.cs" />
+    <Compile Include="EndpointDeliveryService.cs" />
     <Compile Include="IDistributable.cs" />
     <Compile Include="IDistributor.cs" />
     <Compile Include="IEndpointDeliveryService.cs" />

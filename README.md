@@ -88,10 +88,10 @@ This will limit the overall concurrent deliveries to three regardless of which e
 
 **2. Endpoint Delivery Service Throttling**
 
-In the `Delivered.Concurrency namespace`, an abstract class `ThrottledEndpointDeliveryService` is provided that offers throttling for an individual endpoint delivery service.
+The abstract class `EndpointDeliveryService` is provided which offers concurrency throttling.
 
 ```C#
-public class FtpDeliveryService : ThrottledEndpointDeliveryService<File, FtpEndpoint>
+public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
 {
     public FtpDeliveryService()
     {
@@ -99,7 +99,7 @@ public class FtpDeliveryService : ThrottledEndpointDeliveryService<File, FtpEndp
         MaximumConcurrentDeliveries(e => e.Host, 1);
     }
 
-    public override async Task DeliverThrottledAsync(File file, FtpEndpoint ftpEndpoint)
+    public override async Task DeliverAsync(File file, FtpEndpoint ftpEndpoint)
     {
         //Deliver the file to the FTP endpoint
     }
@@ -108,7 +108,7 @@ public class FtpDeliveryService : ThrottledEndpointDeliveryService<File, FtpEndp
 
 This will limit the number of all concurrent deliveries using `FtpDeliveryService` to three, but will limit concurrent deliveries per host to one. This is useful if you don't want to overly tax a receiving server.
 
-The second `MaximumConcurrentDeliveries` in the previous example takes a grouping function with an `IEndpoint` parameter and an `object` return. All endpoints are grouped according to the grouping function and `.Equals`. Throttling is applied to each group which allows for a more complex appilcation such as:
+The second `MaximumConcurrentDeliveries` in the previous example takes a grouping function with an `IEndpoint` parameter and an `object` return. All endpoints are grouped according to the grouping function and `.Equals`. Throttling is applied to each group which allows for a more complex application such as:
 
 ```C#
 MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
