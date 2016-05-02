@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Delivered.Tests.Fakes;
 using NUnit.Framework;
 using Shouldly;
 
@@ -15,7 +16,7 @@ namespace Delivered.Tests
         {
             var endpoint = new FakeEndpoint();
 
-            var endpointDeliveryService = new FakeEndpointDeliveryService(new TimeSpan(0, 0, 0, 0, 100));
+            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
 
             var task1 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(new FakeDistributable(), endpoint);
             var task2 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(new FakeDistributable(), endpoint);
@@ -35,7 +36,7 @@ namespace Delivered.Tests
             var distributable2 = new FakeDistributable();
             var endpoint = new FakeEndpoint();
             
-            var endpointDeliveryService = new FakeEndpointDeliveryService(new TimeSpan(0, 0, 0, 0, 100));
+            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
             endpointDeliveryService.MaximumConcurrentDeliveries(1);
 
             var task1 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable1, endpoint);
@@ -58,7 +59,7 @@ namespace Delivered.Tests
 
             var a = new Dictionary<Func<FakeEndpoint, object>, int>();
 
-            var endpointDeliveryService = new FakeEndpointDeliveryService(new TimeSpan(0, 0, 0, 0, 100),
+            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100),
                 new Dictionary<Func<FakeEndpoint, object>, int> { { e => e.Host, 1 } });
 
             var task1 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint1);
@@ -81,7 +82,7 @@ namespace Delivered.Tests
 
             var a = new Dictionary<Func<FakeEndpoint, object>, int>();
 
-            var endpointDeliveryService = new FakeEndpointDeliveryService(new TimeSpan(0, 0, 0, 0, 100),
+            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100),
                 new Dictionary<Func<FakeEndpoint, object>, int> { { e => e.Host, 1 } });
 
             var task1 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint1);
@@ -97,52 +98,6 @@ namespace Delivered.Tests
 
         #region "Fakes"
 
-        public class FakeEndpointDeliveryService : EndpointDeliveryService<FakeDistributable, FakeEndpoint>
-        {
-            public class LogEntry
-            {
-                public FakeDistributable Distributable;
-                public FakeEndpoint Endpoint;
-                public DateTime StartDateTime;
-                public DateTime EndDateTime;
-            }
-
-            public List<LogEntry> LogEntries = new List<LogEntry>();
-
-            private readonly TimeSpan _timeSpanToDeliver;
-
-            public FakeEndpointDeliveryService(TimeSpan timeSpanToDeliver)
-            {
-                _timeSpanToDeliver = timeSpanToDeliver;
-            }
-
-            public FakeEndpointDeliveryService(TimeSpan timeSpanToDeliver, IDictionary<Func<FakeEndpoint, object>, int> groupingFuncs)
-            {
-                _timeSpanToDeliver = timeSpanToDeliver;
-                foreach (var keyValuePair in groupingFuncs)
-                {
-                    MaximumConcurrentDeliveries(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
-
-            public override async Task DeliverAsync(FakeDistributable distributable, FakeEndpoint endpoint)
-            {
-                var startTime = DateTime.Now;
-
-                await Task.Delay(_timeSpanToDeliver);
-
-                var endTime = DateTime.Now;
-
-                LogEntries.Add(new LogEntry
-                {
-                    Distributable = distributable,
-                    Endpoint = endpoint,
-                    StartDateTime = startTime,
-                    EndDateTime = endTime
-                });
-            }
-        }
-        
         public class FakeDistributable : IDistributable
         {
         }
