@@ -7,12 +7,13 @@ namespace Delivered.Concurrency.Throttlers
 {
     internal class MultipleGroupThrottler<TSubject>
     {
-        private readonly List<GroupThrottler<TSubject>> _concurrencyLimiters =
+        private readonly List<GroupThrottler<TSubject>> _groupThrottlers =
             new List<GroupThrottler<TSubject>>();
+        
 
         public void AddConcurrencyLimiter(Func<TSubject, object> groupingFunc, int number)
         {
-            _concurrencyLimiters.Add(new GroupThrottler<TSubject>(groupingFunc, number));
+            _groupThrottlers.Add(new GroupThrottler<TSubject>(groupingFunc, number));
         }
 
         public async Task Do(Func<Task> asyncFunc, TSubject subject)
@@ -23,9 +24,9 @@ namespace Delivered.Concurrency.Throttlers
             try
             {
                 //We must obtain locks in order to prevent cycles from forming
-                foreach (var concurrencyLimiter in _concurrencyLimiters)
+                foreach (var groupThrottler in _groupThrottlers)
                 {
-                    var semaphore = concurrencyLimiter.GetSemaphoreForGroup(subject);
+                    var semaphore = groupThrottler.GetSemaphoreForGroup(subject);
                     if (semaphore == null) continue;
 
                     semaphoresEntered.Add(semaphore);
