@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Delivered.Concurrency;
+using Delivered;
 
 namespace DemoDistributor.Endpoints.Sharepoint
 {
-    public class SharepointDeliveryService : ThrottledEndpointDeliveryService<File, SharepointEndpoint>
+    public class SharepointDeliveryService : EndpointDeliveryService<File, SharepointEndpoint>
     {
         public SharepointDeliveryService()
         {
@@ -12,7 +12,7 @@ namespace DemoDistributor.Endpoints.Sharepoint
             MaximumConcurrentDeliveries(2);
         }
 
-        protected override async Task DeliverThrottledAsync(File file, SharepointEndpoint endpoint)
+        protected override async Task DeliverAsync(File file, SharepointEndpoint endpoint)
         {
             Console.WriteLine($"Distributing file {file.Name} to Sharepoint URI {endpoint.Uri}");
 

@@ -11,7 +11,7 @@ namespace DemoDistributor
         {
             //Configure the distributor
             var distributor = new Distributor<File, Vendor>();
-            distributor.RegisterEndpointRepository(new FileSystemEndpointRepository());
+            //distributor.RegisterEndpointRepository(new FileSystemEndpointRepository());
             distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
             distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
             distributor.RegisterEndpointDeliveryService(new SharepointDeliveryService());
