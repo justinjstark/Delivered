@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Delivered.Concurrency.Throttlers;
 
-namespace Delivered
+namespace Delivered.Concurrency
 {
-    public abstract class ConcurrencyLimitedEndpointDeliveryService<TDistributable, TEndpoint>
+    public abstract class ThrottledEndpointDeliveryService<TDistributable, TEndpoint>
         : IEndpointDeliveryService<TDistributable, TEndpoint>
         where TDistributable : IDistributable
         where TEndpoint : IEndpoint
     {
-        private readonly MultipleConcurrencyLimiter<TEndpoint> _multipleConcurrencyLimiter =
-            new MultipleConcurrencyLimiter<TEndpoint>();
-        
+        private readonly MultipleGroupThrottler<TEndpoint> _throttler =
+            new MultipleGroupThrottler<TEndpoint>();
+
+        protected abstract Task DeliverThrottledAsync(TDistributable distributable, TEndpoint endpoint);
+
         public void MaximumConcurrentDeliveries(int number)
         {
             if (number <= 0)
@@ -18,22 +21,20 @@ namespace Delivered
                 throw new ArgumentException(nameof(number));
             }
 
-            _multipleConcurrencyLimiter.AddConcurrencyLimiter(e => 1842872753, number);
+            _throttler.AddConcurrencyLimiter(e => Guid.NewGuid(), number);
         }
 
         public void MaximumConcurrentDeliveries(Func<TEndpoint, object> groupingFunc, int number)
         {
-            _multipleConcurrencyLimiter.AddConcurrencyLimiter(groupingFunc, number);
+            _throttler.AddConcurrencyLimiter(groupingFunc, number);
         }
-
-        protected abstract Task DoDeliveryAsync(TDistributable distributable, TEndpoint endpoint);
 
         public async Task DeliverAsync(TDistributable distributable, TEndpoint endpoint)
         {
-            await _multipleConcurrencyLimiter.Do(async () =>
+            await _throttler.Do(async () =>
             {
-                await DoDeliveryAsync(distributable, endpoint).ConfigureAwait(false);
-            }, endpoint);
+                await DeliverThrottledAsync(distributable, endpoint).ConfigureAwait(false);
+            }, endpoint).ConfigureAwait(false);
         }
 
         public async Task DeliverAsync(IDistributable distributable, IEndpoint endpoint)

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace Delivered
+namespace Delivered.Concurrency.Throttlers
 {
-    internal class ConcurrencyLimiter<TSubject>
+    internal class GroupThrottler<TSubject>
     {
         private readonly Func<TSubject, object> _groupingFunc;
 
@@ -14,7 +13,7 @@ namespace Delivered
         private readonly ConcurrentDictionary<object, SemaphoreSlim> _semaphores
             = new ConcurrentDictionary<object, SemaphoreSlim>();
 
-        public ConcurrencyLimiter(Func<TSubject, object> groupingFunc, int concurrencyLimit)
+        public GroupThrottler(Func<TSubject, object> groupingFunc, int concurrencyLimit)
         {
             if (concurrencyLimit <= 0)
             {
@@ -25,28 +24,7 @@ namespace Delivered
             _concurrencyLimit = concurrencyLimit;
         }
 
-        public async Task WaitFor(TSubject subject)
-        {
-            var semaphore = GetSemaphoreForGroup(subject);
-
-            if (semaphore == null)
-            {
-                await Task.FromResult(0);
-            }
-            else
-            {
-                await semaphore.WaitAsync().ConfigureAwait(false);
-            }
-        }
-
-        public void Release(TSubject subject)
-        {
-            var semaphore = GetSemaphoreForGroup(subject);
-
-            semaphore?.Release();
-        }
-
-        private SemaphoreSlim GetSemaphoreForGroup(TSubject subject)
+        public SemaphoreSlim GetSemaphoreForGroup(TSubject subject)
         {
             var reducedSubject = _groupingFunc.Invoke(subject);
 
