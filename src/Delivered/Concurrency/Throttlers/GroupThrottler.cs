@@ -28,10 +28,7 @@ namespace Delivered.Concurrency.Throttlers
         {
             var reducedSubject = _groupingFunc.Invoke(subject);
 
-            if (reducedSubject == null)
-            {
-                return null;
-            }
+            if (reducedSubject == null) return null;
 
             var semaphore = _semaphores.GetOrAdd(reducedSubject, new SemaphoreSlim(_concurrencyLimit));
 
