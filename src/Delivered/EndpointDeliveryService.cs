@@ -12,7 +12,7 @@ namespace Delivered
         private readonly MultipleGroupThrottler<TEndpoint> _throttler =
             new MultipleGroupThrottler<TEndpoint>();
 
-        protected abstract Task DeliverAsync(TDistributable distributable, TEndpoint endpoint);
+        public abstract Task DeliverAsync(TDistributable distributable, TEndpoint endpoint);
 
         public void MaximumConcurrentDeliveries(int number)
         {
@@ -21,7 +21,7 @@ namespace Delivered
                 throw new ArgumentException(nameof(number));
             }
 
-            _throttler.AddConcurrencyLimiter(e => Guid.NewGuid(), number);
+            _throttler.AddConcurrencyLimiter(e => 0, number);
         }
 
         public void MaximumConcurrentDeliveries(Func<TEndpoint, object> groupingFunc, int number)
