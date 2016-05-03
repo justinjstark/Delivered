@@ -6,7 +6,11 @@ A .NET distribution framework supporting custom distributables and endpoints.
 
 ## How It Works
 
-Delivered is designed to coordinate the delivery of files or other custom distributables to recipient endpoints. It is possible for one recipient to have multiple endpoints of various types (FTP, Sharepoint, Web Service, etc). Once configured, calling the `Distribute(distributable, recipient)` method will send the distributable to all endpoints associated with the recipient. Delivered chooses which endpoint delivery service(s) to use based on the type of the endpoint returned from the registered endpoint repositories.
+Delivered is designed to coordinate the delivery of files or other custom distributables to endpoints (FTP, Sharepoint, Web Service, etc). Once configured, calling the `Distribute(distributable, recipient)` method will send the distributable to all endpoints associated with a recipient. Delivered chooses which endpoint delivery service(s) to use based on the type of each endpoint returned from the registered endpoint repositories.
+
+## Demo
+
+A simple demo is available in [src/Demo](https://github.com/justinjstark/Delivered/tree/master/src/Demo).
 
 ## Setup
 
@@ -114,7 +118,7 @@ The second `MaximumConcurrentDeliveries` in the previous example takes a groupin
 MaximumConcurrentDeliveries(e => new { e.Host, e.Port }, 1);
 ```
 
-In this example, FTP deliveries to the same host and port are limited to single concurrency. This would, however, not limit simultaneous deliveries to the same host on two different ports, or to different hosts on the same port.
+In this example, deliveries to the same host and port are limited to single concurrency. This would, however, not limit simultaneous deliveries to the same host on two different ports, or to different hosts on the same port.
 
 Multiple `MaximumConcurrentDeliveries` can be specified allowing for great flexibility in coordinating deliveries.
 
@@ -130,6 +134,6 @@ MaximumConcurrentDeliveries(e =>
 }, 1);
 ```
 
-In this example, there will be at most five concurrent FTP deliveries. All deliveries to the same host will be limited to three concurrent deliveries. All deliveries to `reallyslowserver.com` will be limited to one concurrent delivery.
+In this example, there will be at most five concurrent deliveries. All deliveries to the same host will be limited to three concurrent deliveries. All deliveries to `reallyslowserver.com` will be limited to one concurrent delivery.
 
-Grouping to null will exclude the endpoint from throttling by this group. In the previous example, a delivery to a host other than `reallyslowserver.com` will be limited to five concurrent deliveries and three to the same host but will be unaffected by the third limitation.
+Grouping to null excludes the endpoint from being throttled by this group. In the previous example, a delivery to a host other than `reallyslowserver.com` will be limited to five concurrent deliveries and three to the same host, however, the delivery will be unaffected by the third limitation because it is grouped to null.
