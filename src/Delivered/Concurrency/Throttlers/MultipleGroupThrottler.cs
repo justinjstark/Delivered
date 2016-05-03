@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace Delivered.Concurrency.Throttlers
 {
-    internal class MultipleGroupThrottler<TSubject>
+    public class MultipleGroupThrottler<TSubject>
     {
         private readonly List<GroupThrottler<TSubject>> _groupThrottlers =
             new List<GroupThrottler<TSubject>>();
         
-
         public void AddConcurrencyLimiter(Func<TSubject, object> groupingFunc, int number)
         {
             _groupThrottlers.Add(new GroupThrottler<TSubject>(groupingFunc, number));
