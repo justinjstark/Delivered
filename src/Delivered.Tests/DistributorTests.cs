@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Delivered.Tests.Fakes;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -92,6 +95,69 @@ namespace Delivered.Tests
             endpointDeliveryService2.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Once);
         }
 
+        [Test]
+        public void DistributeAsync_DistributesMultipleAtATimeByDefault()
+        {
+            var distributable1 = new FakeDistributable();
+            var distributable2 = new FakeDistributable();
+            var recipient = new FakeRecipient();
+            var endpoint = new FakeEndpoint();
+
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>();
+
+            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
+
+            var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
+            endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
+                .Returns(new[] { endpoint });
+
+            distributor.RegisterEndpointDeliveryService(endpointDeliveryService);
+            distributor.RegisterEndpointRepository(endpointRepository.Object);
+
+            var task1 = distributor.DistributeAsync(distributable1, recipient);
+            var task2 = distributor.DistributeAsync(distributable2, recipient);
+
+            Task.WaitAll(task1, task2);
+
+            var lastStartTime = endpointDeliveryService.LogEntries.Max(e => e.StartDateTime);
+            var firstEndTime = endpointDeliveryService.LogEntries.Min(e => e.EndDateTime);
+
+            lastStartTime.ShouldBeLessThan(firstEndTime);
+        }
+
+        [Test]
+        public void DistributeAsync_DistributesOneAtATimeWhenThrottledToOne()
+        {
+            var distributable1 = new FakeDistributable();
+            var distributable2 = new FakeDistributable();
+            var recipient = new FakeRecipient();
+            var endpoint = new FakeEndpoint();
+
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>();
+
+            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
+
+            var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
+            endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
+                .Returns(new[] { endpoint });
+
+            distributor.RegisterEndpointDeliveryService(endpointDeliveryService);
+            distributor.RegisterEndpointRepository(endpointRepository.Object);
+            distributor.MaximumConcurrentDeliveries(1);
+
+            var task1 = distributor.DistributeAsync(distributable1, recipient);
+            var task2 = distributor.DistributeAsync(distributable2, recipient);
+
+            Task.WaitAll(task1, task2);
+
+            var lastStartTime = endpointDeliveryService.LogEntries.Max(e => e.StartDateTime);
+            var firstEndTime = endpointDeliveryService.LogEntries.Min(e => e.EndDateTime);
+
+            lastStartTime.ShouldBeGreaterThanOrEqualTo(firstEndTime);
+        }
+
+        #region "Fakes"
+
         public class FakeDistributable : IDistributable
         {
         }
@@ -103,5 +169,7 @@ namespace Delivered.Tests
         public class FakeEndpoint : IEndpoint
         {
         }
+
+        #endregion "Fakes"
     }
 }
