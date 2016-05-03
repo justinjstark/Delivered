@@ -57,8 +57,6 @@ namespace Delivered.Tests
             var endpoint1 = new FakeEndpoint { Host = "1" };
             var endpoint2 = new FakeEndpoint { Host = "1" };
 
-            var a = new Dictionary<Func<FakeEndpoint, object>, int>();
-
             var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100),
                 new Dictionary<Func<FakeEndpoint, object>, int> { { e => e.Host, 1 } });
 
@@ -80,10 +78,56 @@ namespace Delivered.Tests
             var endpoint1 = new FakeEndpoint { Host = "1" };
             var endpoint2 = new FakeEndpoint { Host = "2" };
 
-            var a = new Dictionary<Func<FakeEndpoint, object>, int>();
-
             var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100),
                 new Dictionary<Func<FakeEndpoint, object>, int> { { e => e.Host, 1 } });
+
+            var task1 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint1);
+            var task2 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint2);
+
+            Task.WaitAll(task1, task2);
+
+            var task1EndTime = endpointDeliveryService.LogEntries.Single(e => e.Endpoint == endpoint1).EndDateTime;
+            var task2StartTime = endpointDeliveryService.LogEntries.Single(e => e.Endpoint == endpoint2).StartDateTime;
+
+            task2StartTime.ShouldBeLessThan(task1EndTime);
+        }
+
+        [Test]
+        public void DeliverAsync_ThrottlesExceptWhenGroupedToNull()
+        {
+            var distributable = new FakeDistributable();
+            var endpoint1 = new FakeEndpoint { Port = 0 };
+            var endpoint2 = new FakeEndpoint { Port = 1 };
+            var endpoint3 = new FakeEndpoint { Port = 1 };
+
+            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100),
+                new Dictionary<Func<FakeEndpoint, object>, int> { { e => e.Port == 1 ? (int?)null : 1, 1 } });
+
+            var task1 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint1);
+            var task2 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint2);
+            var task3 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint3);
+
+            Task.WaitAll(task1, task2, task3);
+
+            var task1EndTime = endpointDeliveryService.LogEntries.Single(e => e.Endpoint == endpoint1).EndDateTime;
+            var task2StartTime = endpointDeliveryService.LogEntries.Single(e => e.Endpoint == endpoint2).StartDateTime;
+            var task2EndTime = endpointDeliveryService.LogEntries.Single(e => e.Endpoint == endpoint2).EndDateTime;
+            var task3StartTime = endpointDeliveryService.LogEntries.Single(e => e.Endpoint == endpoint3).StartDateTime;
+
+            task2StartTime.ShouldBeLessThan(task1EndTime);
+            task3StartTime.ShouldBeLessThan(task1EndTime);
+            task3StartTime.ShouldBeLessThan(task2EndTime);
+        }
+
+        [Test]
+        public void DeliverAsync_DoesNotThrottleWhenMultipleGroupedToNull()
+        {
+            var distributable = new FakeDistributable();
+            var endpoint1 = new FakeEndpoint();
+            var endpoint2 = new FakeEndpoint();
+
+            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100),
+                new Dictionary<Func<FakeEndpoint, object>, int> { { e => null, 1 } });
 
             var task1 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint1);
             var task2 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint2);
@@ -105,6 +149,7 @@ namespace Delivered.Tests
         public class FakeEndpoint : IEndpoint
         {
             public string Host { get; set; }
+            public int Port { get; set; }
         }
 
         #endregion "Fakes"
