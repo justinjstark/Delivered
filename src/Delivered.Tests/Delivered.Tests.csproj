@@ -66,6 +66,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concurrency\Throttlers\GroupThrottlerTests.cs" />
+    <Compile Include="Concurrency\Throttlers\MultipleGroupThrottlerTests.cs" />
     <Compile Include="EndpointDeliveryServiceTests.cs" />
     <Compile Include="DistributorTests.cs" />
     <Compile Include="Fakes\FakeLoggedEndpointDeliveryService.cs" />

@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Delivered.Concurrency.Throttlers
 {
-    internal class GroupThrottler<TSubject>
+    public class GroupThrottler<TSubject>
     {
         private readonly Func<TSubject, object> _groupingFunc;
 
