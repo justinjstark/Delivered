@@ -42,7 +42,7 @@ Target "RunTests" (fun _ ->
   !! (testDir @@ "*Tests.dll")
     |> NUnit3 (fun p ->
       {p with
-        OutputDir = testDir @@ "TestResult.xml;format=AppVeyor" }))
+        ResultSpecs = "TestResult.xml;format=AppVeyor" }))
 
 "Clean"
   ==> "RestorePackages"
