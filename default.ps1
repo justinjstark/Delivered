@@ -4,6 +4,8 @@ properties {
 	$base_dir = resolve-path .
 	$source_dir = "$base_dir\src"
 	$tools_dir = "$base_dir\tools"
+	$build_dir = "$base_dir\.build"
+	$result_dir = "$build_dir\result"
 	$global:config = "debug"
 }
 
@@ -55,6 +57,12 @@ task test -depends compile {
 	$testRunner = "$tools_dir\NUnit.ConsoleRunner\tools\nunit3-console.exe"
 	$testDll = "$source_dir\Delivered.Tests\bin\$config\Delivered.Tests.dll"
 
+	#Create result directory
+	if(!(Test-Path $result_dir))
+	{
+		ni $result_dir -type directory -force
+	}
+
 	Write-Host "Running tests"
-	exec {&$testRunner $testDll}
+	exec {&$testRunner $testDll "--result=$result_dir\TestResult.xml"}
 }
