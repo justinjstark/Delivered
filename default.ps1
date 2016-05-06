@@ -17,18 +17,7 @@ task release {
 }
 
 task clean {
-	#Delete bin and obj folders
-	$binFolders = @(gci $source_dir -recurse -Include bin, obj) | % { $_.FullName }
-	foreach ($binFolder in $binFolders)
-	{
-		Write-Host "Deleting directory $binFolder"
-		rd $binFolder -recurse -force -ErrorAction SilentlyContinue | out-null
-	}
-
-	#Delete TestResult.xml
-	$testResult = "$base_dir\TestResult.xml"
-	Write-Host "Deleting $testResult"
-	ri $testResult -force -ErrorAction SilentlyContinue | out-null
+	rd $build_dir -recurse -force -ErrorAction SilentlyContinue | out-null
 }
 
 task compile -depends clean {
@@ -38,8 +27,11 @@ task compile -depends clean {
 	Write-Host "Restoring nuget packages"
 	exec {&$nuget restore $solution}
 
-	Write-Host "Compiling solution"
-	exec {msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /nologo $solution}
+	Write-Host "Compiling app"
+	exec {msbuild /t:Clean /t:Build /p:Configuration=$config /p:OutputPath="$build_dir\app\bin" /p:IntermediateOutputPath="$build_dir\app\obj\" /v:q /nologo "$source_dir\Delivered\Delivered.csproj"}
+
+	Write-Host "Compiling tests"
+		exec {msbuild /t:Clean /t:Build /p:Configuration=$config /p:OutputPath="$build_dir\tests\bin" /p:IntermediateOutputPath="$build_dir\tests\obj\" /v:q /nologo "$source_dir\Delivered.Tests\Delivered.Tests.csproj"}
 }
 
 task compileDemo -depends clean {
@@ -49,13 +41,13 @@ task compileDemo -depends clean {
 	Write-Host "Restoring nuget packages"
 	exec {&$nuget restore $solution}
 
-	Write-Host "Compiling solution"
-	exec {msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /nologo $solution}
+	Write-Host "Compiling project"
+	exec {msbuild /t:Clean /t:Build /p:Configuration=$config /p:OutputPath="$build_dir\demo" /v:q /nologo "$source_dir\Demo\DemoDistributor\DemoDistributor.csproj"}
 }
 
 task test -depends compile {
 	$testRunner = "$tools_dir\NUnit.ConsoleRunner\tools\nunit3-console.exe"
-	$testDll = "$source_dir\Delivered.Tests\bin\$config\Delivered.Tests.dll"
+	$testDll = "$build_dir\tests\bin\Delivered.Tests.dll"
 
 	#Create result directory
 	if(!(Test-Path $result_dir))
