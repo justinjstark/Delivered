@@ -63,6 +63,5 @@ task test -depends compile {
 		ni $result_dir -type directory -force
 	}
 
-	Write-Host "Running tests"
-	exec {&$testRunner $testDll "--result=$result_dir\TestResult.xml"}
+	exec {&$testRunner $testDll "--result=$result_dir\TestResultNUnit3.xml" "--result=$result_dir\TestResultAppVeyor.xml;format=AppVeyor"}
 }
