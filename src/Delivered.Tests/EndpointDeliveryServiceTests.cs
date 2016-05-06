@@ -78,7 +78,7 @@ namespace Delivered.Tests
             var endpoint1 = new FakeEndpoint { Host = "1" };
             var endpoint2 = new FakeEndpoint { Host = "2" };
 
-            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100),
+            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 200),
                 new Dictionary<Func<FakeEndpoint, object>, int> { { e => e.Host, 1 } });
 
             var task1 = ((IEndpointDeliveryService)endpointDeliveryService).DeliverAsync(distributable, endpoint1);
