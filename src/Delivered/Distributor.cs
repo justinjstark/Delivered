@@ -14,8 +14,8 @@ namespace Delivered
         private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
             = new List<IEndpointRepository<TRecipient>>();
 
-        private readonly Dictionary<Type, IEndpointDeliveryService> _endpointDeliveryServices
-            = new Dictionary<Type, IEndpointDeliveryService>();
+        private readonly Dictionary<Type, IDeliverer> _deliverers
+            = new Dictionary<Type, IDeliverer>();
 
         public void MaximumConcurrentDeliveries(int number)
         {
@@ -35,10 +35,10 @@ namespace Delivered
             }
         }
 
-        public void RegisterEndpointDeliveryService<TEndpoint>(IEndpointDeliveryService<TDistributable, TEndpoint> endpointDeliveryService)
+        public void RegisterDeliverer<TEndpoint>(IDeliverer<TDistributable, TEndpoint> deliverer)
             where TEndpoint : IEndpoint
         {
-            _endpointDeliveryServices[typeof(TEndpoint)] = endpointDeliveryService;
+            _deliverers[typeof(TEndpoint)] = deliverer;
         }
 
         public async Task DistributeAsync(TDistributable distributable, TRecipient recipient)
@@ -51,14 +51,14 @@ namespace Delivered
 
                 foreach (var endpoint in endpoints)
                 {
-                    IEndpointDeliveryService endpointDeliveryService;
-                    if (!_endpointDeliveryServices.TryGetValue(endpoint.GetType(), out endpointDeliveryService))
+                    IDeliverer deliverer;
+                    if (!_deliverers.TryGetValue(endpoint.GetType(), out deliverer))
                     {
                         throw new InvalidOperationException(
                             $"No endpoint delivery service registered for endpoint type {endpoint.GetType()}");
                     }
 
-                    var deliveryTask = DeliverAsync(endpointDeliveryService, distributable, endpoint);
+                    var deliveryTask = DeliverAsync(deliverer, distributable, endpoint);
                     deliveryTasks.Add(deliveryTask);
                 }
             }
@@ -81,7 +81,7 @@ namespace Delivered
             }
         }
 
-        private async Task DeliverAsync(IEndpointDeliveryService endpointDeliveryService,
+        private async Task DeliverAsync(IDeliverer deliverer,
             TDistributable distributable, IEndpoint endpoint)
         {
             if (_semaphore != null)
@@ -91,7 +91,7 @@ namespace Delivered
 
             try
             {
-                await endpointDeliveryService.DeliverAsync(distributable, endpoint).ConfigureAwait(false);
+                await deliverer.DeliverAsync(distributable, endpoint).ConfigureAwait(false);
             }
             finally
             {

@@ -13,8 +13,8 @@ namespace DemoDistributor
             var distributor = new Distributor<File, Vendor>();
             distributor.RegisterEndpointRepository(new FileSystemEndpointRepository());
             distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
-            distributor.RegisterEndpointDeliveryService(new FileSystemDeliveryService());
-            distributor.RegisterEndpointDeliveryService(new SharepointDeliveryService());
+            distributor.RegisterDeliverer(new FileSystemDeliverer());
+            distributor.RegisterDeliverer(new SharepointDeliverer());
             distributor.MaximumConcurrentDeliveries(3);
             
             //Distribute a file to a vendor

@@ -68,9 +68,9 @@
   <ItemGroup>
     <Compile Include="Concurrency\Throttlers\GroupThrottlerTests.cs" />
     <Compile Include="Concurrency\Throttlers\MultipleGroupThrottlerTests.cs" />
-    <Compile Include="EndpointDeliveryServiceTests.cs" />
+    <Compile Include="DelivererTests.cs" />
     <Compile Include="DistributorTests.cs" />
-    <Compile Include="Fakes\FakeLoggedEndpointDeliveryService.cs" />
+    <Compile Include="Fakes\FakeLoggedDeliverer.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

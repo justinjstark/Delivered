@@ -4,8 +4,8 @@ using Delivered.Concurrency.Throttlers;
 
 namespace Delivered
 {
-    public abstract class EndpointDeliveryService<TDistributable, TEndpoint>
-        : IEndpointDeliveryService<TDistributable, TEndpoint>
+    public abstract class Deliverer<TDistributable, TEndpoint>
+        : IDeliverer<TDistributable, TEndpoint>
         where TDistributable : IDistributable
         where TEndpoint : IEndpoint
     {
@@ -29,12 +29,12 @@ namespace Delivered
             _throttler.AddConcurrencyLimiter(groupingFunc, number);
         }
 
-        async Task IEndpointDeliveryService<TDistributable, TEndpoint>.DeliverAsync(TDistributable distributable, TEndpoint endpoint)
+        async Task IDeliverer<TDistributable, TEndpoint>.DeliverAsync(TDistributable distributable, TEndpoint endpoint)
         {
             await DeliverWithThrottlingAsync(distributable, endpoint).ConfigureAwait(false);
         }
 
-        async Task IEndpointDeliveryService.DeliverAsync(IDistributable distributable, IEndpoint endpoint)
+        async Task IDeliverer.DeliverAsync(IDistributable distributable, IEndpoint endpoint)
         {
             await DeliverWithThrottlingAsync((TDistributable)distributable, (TEndpoint)endpoint).ConfigureAwait(false);
         }
