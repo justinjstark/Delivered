@@ -12,7 +12,7 @@ namespace Delivered.Tests
     public class DistributorTests
     {
         [Test]
-        public void DistributeAsync_DeliversToAnEndpointTypeWithNoDeliveryServiceThrowsAnError()
+        public void DistributeAsync_DeliversToAnEndpointTypeWithNoDelivererThrowsAnError()
         {
             var distributable = new FakeDistributable();
             var recipient = new FakeRecipient();
@@ -29,70 +29,70 @@ namespace Delivered.Tests
         }
 
         [Test]
-        public void DistributeAsync_DeliversADistributableToARegisteredEndpointDeliveryService()
+        public void DistributeAsync_DeliversADistributableToARegisteredDeliverer()
         {
             var distributable = new FakeDistributable();
             var recipient = new FakeRecipient();
             var endpoint = new FakeEndpoint();
 
-            var endpointDeliveryService = new Mock<IEndpointDeliveryService<FakeDistributable, FakeEndpoint>>();
+            var deliverer = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
             var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new [] { endpoint });
 
             var distributor = new Distributor<FakeDistributable, FakeRecipient>();
             distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.RegisterEndpointDeliveryService(endpointDeliveryService.Object);
+            distributor.RegisterDeliverer(deliverer.Object);
             
             distributor.DistributeAsync(distributable, recipient).Wait();
 
-            endpointDeliveryService.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Once);
+            deliverer.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Once);
         }
 
         [Test]
-        public void DistributeAsync_DoesNotUseTheFirstEndpointDeliveryServiceWhenTwoAreRegistered()
+        public void DistributeAsync_DoesNotUseTheFirstDelivererWhenTwoAreRegistered()
         {
             var distributable = new FakeDistributable();
             var recipient = new FakeRecipient();
             var endpoint = new FakeEndpoint();
 
-            var endpointDeliveryService1 = new Mock<IEndpointDeliveryService<FakeDistributable, FakeEndpoint>>();
-            var endpointDeliveryService2 = new Mock<IEndpointDeliveryService<FakeDistributable, FakeEndpoint>>();
+            var deliverer1 = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
+            var deliverer2 = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
             var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
             var distributor = new Distributor<FakeDistributable, FakeRecipient>();
             distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.RegisterEndpointDeliveryService(endpointDeliveryService1.Object);
-            distributor.RegisterEndpointDeliveryService(endpointDeliveryService2.Object);
+            distributor.RegisterDeliverer(deliverer1.Object);
+            distributor.RegisterDeliverer(deliverer2.Object);
 
             distributor.DistributeAsync(distributable, recipient).Wait();
 
-            endpointDeliveryService1.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Never);
+            deliverer1.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Never);
         }
 
         [Test]
-        public void DistributeAsync_UsesTheSecondEndpointDeliveryServiceWhenTwoAreRegistered()
+        public void DistributeAsync_UsesTheSecondDelivererWhenTwoAreRegistered()
         {
             var distributable = new FakeDistributable();
             var recipient = new FakeRecipient();
             var endpoint = new FakeEndpoint();
 
-            var endpointDeliveryService1 = new Mock<IEndpointDeliveryService<FakeDistributable, FakeEndpoint>>();
-            var endpointDeliveryService2 = new Mock<IEndpointDeliveryService<FakeDistributable, FakeEndpoint>>();
+            var deliverer1 = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
+            var deliverer2 = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
             var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
             var distributor = new Distributor<FakeDistributable, FakeRecipient>();
             distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.RegisterEndpointDeliveryService(endpointDeliveryService1.Object);
-            distributor.RegisterEndpointDeliveryService(endpointDeliveryService2.Object);
+            distributor.RegisterDeliverer(deliverer1.Object);
+            distributor.RegisterDeliverer(deliverer2.Object);
 
             distributor.DistributeAsync(distributable, recipient).Wait();
             
-            endpointDeliveryService2.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Once);
+            deliverer2.Verify(eds => eds.DeliverAsync(distributable, (IEndpoint) endpoint), Times.Once);
         }
 
         [Test]
@@ -105,13 +105,13 @@ namespace Delivered.Tests
 
             var distributor = new Distributor<FakeDistributable, FakeRecipient>();
 
-            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
+            var deliverer = new FakeLoggedDeliverer<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
 
             var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
-            distributor.RegisterEndpointDeliveryService(endpointDeliveryService);
+            distributor.RegisterDeliverer(deliverer);
             distributor.RegisterEndpointRepository(endpointRepository.Object);
 
             var task1 = distributor.DistributeAsync(distributable1, recipient);
@@ -119,8 +119,8 @@ namespace Delivered.Tests
 
             Task.WaitAll(task1, task2);
 
-            var lastStartTime = endpointDeliveryService.LogEntries.Max(e => e.StartDateTime);
-            var firstEndTime = endpointDeliveryService.LogEntries.Min(e => e.EndDateTime);
+            var lastStartTime = deliverer.LogEntries.Max(e => e.StartDateTime);
+            var firstEndTime = deliverer.LogEntries.Min(e => e.EndDateTime);
 
             lastStartTime.ShouldBeLessThan(firstEndTime);
         }
@@ -135,13 +135,13 @@ namespace Delivered.Tests
 
             var distributor = new Distributor<FakeDistributable, FakeRecipient>();
 
-            var endpointDeliveryService = new FakeLoggedEndpointDeliveryService<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
+            var deliverer = new FakeLoggedDeliverer<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
 
             var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
-            distributor.RegisterEndpointDeliveryService(endpointDeliveryService);
+            distributor.RegisterDeliverer(deliverer);
             distributor.RegisterEndpointRepository(endpointRepository.Object);
             distributor.MaximumConcurrentDeliveries(1);
 
@@ -150,8 +150,8 @@ namespace Delivered.Tests
 
             Task.WaitAll(task1, task2);
 
-            var lastStartTime = endpointDeliveryService.LogEntries.Max(e => e.StartDateTime);
-            var firstEndTime = endpointDeliveryService.LogEntries.Min(e => e.EndDateTime);
+            var lastStartTime = deliverer.LogEntries.Max(e => e.StartDateTime);
+            var firstEndTime = deliverer.LogEntries.Min(e => e.EndDateTime);
 
             lastStartTime.ShouldBeGreaterThanOrEqualTo(firstEndTime);
         }

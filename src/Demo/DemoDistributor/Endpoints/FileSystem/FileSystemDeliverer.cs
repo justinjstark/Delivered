@@ -4,9 +4,9 @@ using Delivered;
 
 namespace DemoDistributor.Endpoints.FileSystem
 {
-    public class FileSystemDeliveryService : EndpointDeliveryService<File, FileSystemEndpoint>
+    public class FileSystemDeliverer : Deliverer<File, FileSystemEndpoint>
     {
-        public FileSystemDeliveryService()
+        public FileSystemDeliverer()
         {
             MaximumConcurrentDeliveries(5);
         }

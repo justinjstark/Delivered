@@ -6,7 +6,7 @@ A .NET distribution framework supporting custom distributables and endpoints.
 
 ## How It Works
 
-Delivered is designed to coordinate the delivery of files or other custom distributables to endpoints (FTP, Sharepoint, Web Service, etc). Once configured, calling the `Distribute(distributable, recipient)` method will send the distributable to all endpoints associated with a recipient. Delivered chooses which endpoint delivery service(s) to use based on the type of each endpoint returned from the registered endpoint repositories.
+Delivered is designed to coordinate the delivery of files or other custom distributables to endpoints (ex: FTP, Sharepoint, Web Service, etc). Once configured, calling the `Distribute(distributable, recipient)` method will send the distributable to all endpoints associated with a recipient. Delivered chooses which deliverers to use based on the type of each endpoint returned from the registered endpoint repositories.
 
 ## Demo
 
@@ -14,7 +14,7 @@ A simple demo is available in [src/Demo](https://github.com/justinjstark/Deliver
 
 ## Setup
 
-**1. Define a distributable, recipient, and endpoint(s)**
+**1. Define a distributable, recipient, and endpoint**
 
 ```C#
 public class File : IDistributable
@@ -47,10 +47,10 @@ public class FtpEndpointRepository : IEndpointRepository<Vendor>
 }
 ```
 
-**3. Define an endpoint delivery service that sends the distributable to the endpoint**
+**3. Define a deliverer that sends the distributable to the endpoint**
 
 ```C#
-public class FtpDeliveryService : IEndpointDeliveryService<File, FtpEndpoint>
+public class FtpDeliverer : IDeliverer<File, FtpEndpoint>
 {
     public async Task DeliverAsync(File file, FtpEndpoint ftpEndpoint)
     {
@@ -59,19 +59,19 @@ public class FtpDeliveryService : IEndpointDeliveryService<File, FtpEndpoint>
 }
 ```
 
-**4. Register the repository and delivery service with the distributor and run the distributor**
+**4. Register the repository and deliverer with the distributor and run the distributor**
 
 ```C#
 var distributor = new Distributor<File, Vendor>();
 distributor.RegisterEndpointRepository(new FtpEndpointRepository());
-distributor.RegisterEndpointDeliveryService(new FtpDeliveryService());
+distributor.RegisterDeliverer(new FtpDeliverer());
 
 distributor.DistributeAsync(someFile, someVendor).Wait();
 ```
 
 ## Concurrency
 
-When endpoint delivery services are implemented asynchronously (ex: using [FtpClient.Async](https://github.com/rkttu/System.Net.FtpClient.Async)), the deliveries will be performed asynchronously.
+When a deliverer is implemented asynchronously (ex: using [FtpClient.Async](https://github.com/rkttu/System.Net.FtpClient.Async)), the deliveries will be performed asynchronously.
 
 ```C#
 var task1 = distributor.DistributeAsync(someFile1, someVendor);
@@ -88,16 +88,16 @@ distributor.MaximumConcurrentDeliveries(3)
 distributor.DistributeAsync(someFile, someVendor).Wait();
 ```
 
-This will limit the overall concurrent deliveries to three regardless of which endpoint delivery service is used.
+This will limit the overall concurrent deliveries to three regardless of which deliverer is used.
 
-**2. Endpoint Delivery Service Throttling**
+**2. Deliverer Throttling**
 
-The abstract class `EndpointDeliveryService` is provided which offers concurrency throttling.
+The abstract class `Deliverer` is provided which offers concurrency throttling.
 
 ```C#
-public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
+public class FtpDeliverer : Deliverer<File, FtpEndpoint>
 {
-    public FtpDeliveryService()
+    public FtpDeliverer()
     {
         MaximumConcurrentDeliveries(3);
         MaximumConcurrentDeliveries(e => e.Host, 1);
@@ -110,7 +110,7 @@ public class FtpDeliveryService : EndpointDeliveryService<File, FtpEndpoint>
 }
 ```
 
-This will limit the number of all concurrent deliveries using `FtpDeliveryService` to three, but will limit concurrent deliveries per host to one. This is useful if you don't want to overly tax a receiving server.
+This will limit the number of all concurrent deliveries using `FtpDeliverer` to three, but will limit concurrent deliveries per host to one. This is useful if you don't want to overly tax a receiving server.
 
 The second `MaximumConcurrentDeliveries` in the previous example takes a grouping function with an `IEndpoint` parameter and an `object` return. All endpoints are grouped according to the grouping function and `.Equals`. Throttling is applied to each group which allows for a more complex application such as:
 
@@ -136,4 +136,4 @@ MaximumConcurrentDeliveries(e =>
 
 In this example, there will be at most five concurrent deliveries. All deliveries to the same host will be limited to three concurrent deliveries. All deliveries to `reallyslowserver.com` will be limited to one concurrent delivery.
 
-Grouping to null excludes the endpoint from being throttled by this group. In the previous example, a delivery to a host other than `reallyslowserver.com` will be limited to five concurrent deliveries and three to the same host, however, the delivery will be unaffected by the third limitation because it is grouped to null.
+Grouping to null excludes the endpoint from being throttled by the group. In the previous example, a delivery to a host other than `reallyslowserver.com` will be limited to five concurrent deliveries and three to the same host, however, the delivery will be unaffected by the third limitation because it is grouped to null.

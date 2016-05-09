@@ -4,9 +4,9 @@ using Delivered;
 
 namespace DemoDistributor.Endpoints.Sharepoint
 {
-    public class SharepointDeliveryService : EndpointDeliveryService<File, SharepointEndpoint>
+    public class SharepointDeliverer : Deliverer<File, SharepointEndpoint>
     {
-        public SharepointDeliveryService()
+        public SharepointDeliverer()
         {
             MaximumConcurrentDeliveries(e => new Uri(e.Uri).Host, 1);
             MaximumConcurrentDeliveries(2);

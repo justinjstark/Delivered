@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Delivered.Tests.Fakes
 {
-    public class FakeLoggedEndpointDeliveryService<TDistributable, TEndpoint> : EndpointDeliveryService<TDistributable, TEndpoint>
+    public class FakeLoggedDeliverer<TDistributable, TEndpoint> : Deliverer<TDistributable, TEndpoint>
         where TDistributable : IDistributable
         where TEndpoint : IEndpoint
     {
@@ -20,12 +20,12 @@ namespace Delivered.Tests.Fakes
 
         private readonly TimeSpan _timeSpanToDeliver;
 
-        public FakeLoggedEndpointDeliveryService(TimeSpan timeSpanToDeliver)
+        public FakeLoggedDeliverer(TimeSpan timeSpanToDeliver)
         {
             _timeSpanToDeliver = timeSpanToDeliver;
         }
 
-        public FakeLoggedEndpointDeliveryService(TimeSpan timeSpanToDeliver, IDictionary<Func<TEndpoint, object>, int> groupingFuncs)
+        public FakeLoggedDeliverer(TimeSpan timeSpanToDeliver, IDictionary<Func<TEndpoint, object>, int> groupingFuncs)
         {
             _timeSpanToDeliver = timeSpanToDeliver;
             foreach (var keyValuePair in groupingFuncs)

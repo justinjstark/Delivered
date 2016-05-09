@@ -43,10 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="File.cs" />
-    <Compile Include="Endpoints\FileSystem\FileSystemDeliveryService.cs" />
+    <Compile Include="Endpoints\FileSystem\FileSystemDeliverer.cs" />
     <Compile Include="Endpoints\FileSystem\FileSystemEndpoint.cs" />
     <Compile Include="Endpoints\FileSystem\FileSystemEndpointRepository.cs" />
-    <Compile Include="Endpoints\Sharepoint\SharepointDeliveryService.cs" />
+    <Compile Include="Endpoints\Sharepoint\SharepointDeliverer.cs" />
     <Compile Include="Endpoints\Sharepoint\SharepointEndpoint.cs" />
     <Compile Include="Endpoints\Sharepoint\SharepointEndpointRepository.cs" />
     <Compile Include="Vendor.cs" />

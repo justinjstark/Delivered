@@ -41,10 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Distributor.cs" />
-    <Compile Include="EndpointDeliveryService.cs" />
+    <Compile Include="Deliverer.cs" />
     <Compile Include="IDistributable.cs" />
     <Compile Include="IDistributor.cs" />
-    <Compile Include="IEndpointDeliveryService.cs" />
+    <Compile Include="IDeliverer.cs" />
     <Compile Include="IEndpoint.cs" />
     <Compile Include="IEndpointRepository.cs" />
     <Compile Include="Concurrency\Throttlers\MultipleGroupThrottler.cs" />
