@@ -5,7 +5,7 @@ using Delivered;
 
 namespace DemoDistributor.Endpoints.FileSystem
 {
-    public class FileSystemEndpointRepository : IEndpointRepository<Vendor>
+    public class FileSystemEndpointRepository
     {
         public IEnumerable<IEndpoint> GetEndpointsForRecipient(Vendor vendor)
         {

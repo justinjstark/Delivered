@@ -5,7 +5,7 @@ using Delivered;
 
 namespace DemoDistributor.Endpoints.Sharepoint
 {
-    public class SharepointEndpointRepository : IEndpointRepository<Vendor>
+    public class SharepointEndpointRepository
     {
         public IEnumerable<IEndpoint> GetEndpointsForRecipient(Vendor vendor)
         {

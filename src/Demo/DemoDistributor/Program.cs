@@ -11,10 +11,12 @@ namespace DemoDistributor
         {
             //Configure the distributor
             var distributor = new Distributor<File, Vendor>();
-            distributor.RegisterEndpointRepository(new FileSystemEndpointRepository());
-            distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
-            distributor.RegisterDeliverer(new FileSystemDeliverer());
-            distributor.RegisterDeliverer(new SharepointDeliverer());
+            var fileSystemEndpointRepository = new FileSystemEndpointRepository();
+            var sharepointEndpointRepository = new SharepointEndpointRepository();
+            distributor.GetEndpointsUsing(fileSystemEndpointRepository.GetEndpointsForRecipient);
+            distributor.GetEndpointsUsing(sharepointEndpointRepository.GetEndpointsForRecipient);
+            distributor.DeliverUsing(new FileSystemDeliverer());
+            distributor.DeliverUsing(new SharepointDeliverer());
             distributor.MaximumConcurrentDeliveries(3);
             
             //Distribute a file to a vendor

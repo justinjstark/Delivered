@@ -46,7 +46,6 @@
     <Compile Include="IDistributor.cs" />
     <Compile Include="IDeliverer.cs" />
     <Compile Include="IEndpoint.cs" />
-    <Compile Include="IEndpointRepository.cs" />
     <Compile Include="Concurrency\Throttlers\MultipleGroupThrottler.cs" />
     <Compile Include="IRecipient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

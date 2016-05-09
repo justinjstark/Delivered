@@ -11,8 +11,8 @@ namespace Delivered
     {
         private SemaphoreSlim _semaphore;
 
-        private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
-            = new List<IEndpointRepository<TRecipient>>();
+        private readonly List<Func<TRecipient, IEnumerable<IEndpoint>>> _endpointGetters
+            = new List<Func<TRecipient, IEnumerable<IEndpoint>>>();
 
         private readonly Dictionary<Type, IDeliverer> _deliverers
             = new Dictionary<Type, IDeliverer>();
@@ -27,15 +27,12 @@ namespace Delivered
             _semaphore = new SemaphoreSlim(number);
         }
 
-        public void RegisterEndpointRepository(IEndpointRepository<TRecipient> endpointRepository)
+        public void GetEndpointsUsing(Func<TRecipient, IEnumerable<IEndpoint>> getterFunc)
         {
-            if (!_endpointRepositories.Contains(endpointRepository))
-            {
-                _endpointRepositories.Add(endpointRepository);
-            }
+            _endpointGetters.Add(getterFunc);
         }
 
-        public void RegisterDeliverer<TEndpoint>(IDeliverer<TDistributable, TEndpoint> deliverer)
+        public void DeliverUsing<TEndpoint>(IDeliverer<TDistributable, TEndpoint> deliverer)
             where TEndpoint : IEndpoint
         {
             _deliverers[typeof(TEndpoint)] = deliverer;
@@ -45,9 +42,9 @@ namespace Delivered
         {
             var deliveryTasks = new List<Task>();
 
-            foreach (var endpointRepository in _endpointRepositories)
+            foreach (var endpointGetter in _endpointGetters)
             {
-                var endpoints = endpointRepository.GetEndpointsForRecipient(recipient);
+                var endpoints = endpointGetter.Invoke(recipient);
 
                 foreach (var endpoint in endpoints)
                 {

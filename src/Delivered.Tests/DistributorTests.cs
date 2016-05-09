@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Delivered.Tests.Fakes;
@@ -18,12 +19,10 @@ namespace Delivered.Tests
             var recipient = new FakeRecipient();
             var endpoint = new FakeEndpoint();
 
-            var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
-            endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
-                .Returns(new[] { endpoint });
+            Func<FakeRecipient, IEnumerable<FakeEndpoint>> endpointGetter = r => new[] { endpoint };
 
             var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
+            distributor.GetEndpointsUsing(endpointGetter);
 
             Should.ThrowAsync<InvalidOperationException>(distributor.DistributeAsync(distributable, recipient));
         }
@@ -36,13 +35,12 @@ namespace Delivered.Tests
             var endpoint = new FakeEndpoint();
 
             var deliverer = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
-            var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
-            endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
-                .Returns(new [] { endpoint });
+
+            Func<FakeRecipient, IEnumerable<FakeEndpoint>> endpointGetter = r => new[] { endpoint };
 
             var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.RegisterDeliverer(deliverer.Object);
+            distributor.GetEndpointsUsing(endpointGetter);
+            distributor.DeliverUsing(deliverer.Object);
             
             distributor.DistributeAsync(distributable, recipient).Wait();
 
@@ -58,14 +56,13 @@ namespace Delivered.Tests
 
             var deliverer1 = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
             var deliverer2 = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
-            var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
-            endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
-                .Returns(new[] { endpoint });
+
+            Func<FakeRecipient, IEnumerable<FakeEndpoint>> endpointGetter = r => new[] { endpoint };
 
             var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.RegisterDeliverer(deliverer1.Object);
-            distributor.RegisterDeliverer(deliverer2.Object);
+            distributor.GetEndpointsUsing(endpointGetter);
+            distributor.DeliverUsing(deliverer1.Object);
+            distributor.DeliverUsing(deliverer2.Object);
 
             distributor.DistributeAsync(distributable, recipient).Wait();
 
@@ -81,14 +78,13 @@ namespace Delivered.Tests
 
             var deliverer1 = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
             var deliverer2 = new Mock<IDeliverer<FakeDistributable, FakeEndpoint>>();
-            var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
-            endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
-                .Returns(new[] { endpoint });
+
+            Func<FakeRecipient, IEnumerable<FakeEndpoint>> endpointGetter = r => new[] { endpoint };
 
             var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.RegisterDeliverer(deliverer1.Object);
-            distributor.RegisterDeliverer(deliverer2.Object);
+            distributor.GetEndpointsUsing(endpointGetter);
+            distributor.DeliverUsing(deliverer1.Object);
+            distributor.DeliverUsing(deliverer2.Object);
 
             distributor.DistributeAsync(distributable, recipient).Wait();
             
@@ -107,12 +103,10 @@ namespace Delivered.Tests
 
             var deliverer = new FakeLoggedDeliverer<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
 
-            var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
-            endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
-                .Returns(new[] { endpoint });
+            Func<FakeRecipient, IEnumerable<FakeEndpoint>> endpointGetter = r => new[] { endpoint };
 
-            distributor.RegisterDeliverer(deliverer);
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
+            distributor.DeliverUsing(deliverer);
+            distributor.GetEndpointsUsing(endpointGetter);
 
             var task1 = distributor.DistributeAsync(distributable1, recipient);
             var task2 = distributor.DistributeAsync(distributable2, recipient);
@@ -137,12 +131,10 @@ namespace Delivered.Tests
 
             var deliverer = new FakeLoggedDeliverer<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
 
-            var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
-            endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
-                .Returns(new[] { endpoint });
+            Func<FakeRecipient, IEnumerable<FakeEndpoint>> endpointGetter = r => new[] { endpoint };
 
-            distributor.RegisterDeliverer(deliverer);
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
+            distributor.DeliverUsing(deliverer);
+            distributor.GetEndpointsUsing(endpointGetter);
             distributor.MaximumConcurrentDeliveries(1);
 
             var task1 = distributor.DistributeAsync(distributable1, recipient);
