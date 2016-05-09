@@ -22,7 +22,10 @@ namespace Delivered.Tests
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
-            var distributor = new Distributor<FakeDistributable, FakeRecipient>();
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>(config =>
+            {
+                config.
+            });
             distributor.RegisterEndpointRepository(endpointRepository.Object);
 
             Should.ThrowAsync<InvalidOperationException>(distributor.DistributeAsync(distributable, recipient));

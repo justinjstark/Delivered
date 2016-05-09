@@ -5,54 +5,88 @@ using System.Threading.Tasks;
 
 namespace Delivered
 {
+    public class DistributorConfiguration<TDistributable, TRecipient>
+        where TDistributable : IDistributable
+        where TRecipient : IRecipient
+    {
+        internal int? MaximumConcurrentDeliveries;
+
+        private readonly Distributor<TDistributable, TRecipient> _distributor;
+
+        public DistributorConfiguration(Distributor<TDistributable, TRecipient> distributor)
+        {
+            _distributor = distributor;
+        }
+
+        public void SetMaximumConcurrentDeliveries(int maximumConcurrentDeliveries)
+        {
+            if (maximumConcurrentDeliveries <= 0)
+            {
+                throw new ArgumentException("Maximum concurrent deliveries must be greater than zero.", nameof(maximumConcurrentDeliveries));
+            }
+
+            MaximumConcurrentDeliveries = maximumConcurrentDeliveries;
+        }
+
+        public void AddEndpointRepository(IEndpointRepository<TRecipient> endpointRepository)
+        {
+            if (!_distributor.EndpointRepositories.Contains(endpointRepository))
+            {
+                _distributor.EndpointRepositories.Add(endpointRepository);
+            }
+        }
+
+        public void AddDeliverer<TEndpoint>(IDeliverer<TDistributable, TEndpoint> deliverer)
+            where TEndpoint : IEndpoint
+        {
+            _distributor.Deliverers[typeof(TEndpoint)] = deliverer;
+        }
+    }
+
     public class Distributor<TDistributable, TRecipient> : IDistributor<TDistributable, TRecipient>
         where TDistributable : IDistributable
         where TRecipient : IRecipient
     {
-        private SemaphoreSlim _semaphore;
-
-        private readonly List<IEndpointRepository<TRecipient>> _endpointRepositories
+        private static DistributorConfiguration<TDistributable, TRecipient> _configuration;
+        
+        internal readonly List<IEndpointRepository<TRecipient>> EndpointRepositories
             = new List<IEndpointRepository<TRecipient>>();
 
-        private readonly Dictionary<Type, IDeliverer> _deliverers
+        internal readonly Dictionary<Type, IDeliverer> Deliverers
             = new Dictionary<Type, IDeliverer>();
 
-        public void MaximumConcurrentDeliveries(int number)
+        public Distributor(Action<DistributorConfiguration<TDistributable, TRecipient>> configure)
         {
-            if (number <= 0)
-            {
-                throw new ArgumentException(nameof(number));
-            }
-
-            _semaphore = new SemaphoreSlim(number);
+            _configuration = new DistributorConfiguration<TDistributable, TRecipient>(this);
+            configure(_configuration);
         }
 
-        public void RegisterEndpointRepository(IEndpointRepository<TRecipient> endpointRepository)
+        internal void RegisterEndpointRepository(IEndpointRepository<TRecipient> endpointRepository)
         {
-            if (!_endpointRepositories.Contains(endpointRepository))
+            if (!EndpointRepositories.Contains(endpointRepository))
             {
-                _endpointRepositories.Add(endpointRepository);
+                EndpointRepositories.Add(endpointRepository);
             }
         }
 
-        public void RegisterDeliverer<TEndpoint>(IDeliverer<TDistributable, TEndpoint> deliverer)
+        internal void RegisterDeliverer<TEndpoint>(IDeliverer<TDistributable, TEndpoint> deliverer)
             where TEndpoint : IEndpoint
         {
-            _deliverers[typeof(TEndpoint)] = deliverer;
+            Deliverers[typeof(TEndpoint)] = deliverer;
         }
 
         public async Task DistributeAsync(TDistributable distributable, TRecipient recipient)
         {
             var deliveryTasks = new List<Task>();
 
-            foreach (var endpointRepository in _endpointRepositories)
+            foreach (var endpointRepository in EndpointRepositories)
             {
                 var endpoints = endpointRepository.GetEndpointsForRecipient(recipient);
 
                 foreach (var endpoint in endpoints)
                 {
                     IDeliverer deliverer;
-                    if (!_deliverers.TryGetValue(endpoint.GetType(), out deliverer))
+                    if (!Deliverers.TryGetValue(endpoint.GetType(), out deliverer))
                     {
                         throw new InvalidOperationException(
                             $"No endpoint delivery service registered for endpoint type {endpoint.GetType()}");
@@ -81,12 +115,15 @@ namespace Delivered
             }
         }
 
-        private async Task DeliverAsync(IDeliverer deliverer,
+        private static async Task DeliverAsync(IDeliverer deliverer,
             TDistributable distributable, IEndpoint endpoint)
         {
-            if (_semaphore != null)
+            var semaphore = _configuration.MaximumConcurrentDeliveries == null ? null :
+                new SemaphoreSlim(_configuration.MaximumConcurrentDeliveries.Value);
+
+            if (semaphore != null)
             {
-                await _semaphore.WaitAsync().ConfigureAwait(false);
+                await semaphore.WaitAsync().ConfigureAwait(false);
             }
 
             try
@@ -95,7 +132,7 @@ namespace Delivered
             }
             finally
             {
-                _semaphore?.Release();
+                semaphore?.Release();
             }
         }
     }
