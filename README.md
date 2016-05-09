@@ -2,7 +2,7 @@
 
 A .NET distribution framework supporting custom distributables and endpoints.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/aycxbupdujefiw80?svg=true)](https://ci.appveyor.com/project/justinjstark/delivered) [![License](https://img.shields.io/github/license/justinjstark/delivered.svg)](https://img.shields.io/github/license/justinjstark/delivered.svg)
+[![Build status](https://ci.appveyor.com/api/projects/status/aycxbupdujefiw80/branch/master?svg=true)](https://ci.appveyor.com/project/justinjstark/delivered/branch/master) [![License](https://img.shields.io/github/license/justinjstark/delivered.svg)](https://img.shields.io/github/license/justinjstark/delivered.svg)
 
 ## How It Works
 
