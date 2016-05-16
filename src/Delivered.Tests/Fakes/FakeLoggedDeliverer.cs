@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Delivered.Tests.Fakes
@@ -8,26 +9,24 @@ namespace Delivered.Tests.Fakes
         where TDistributable : IDistributable
         where TEndpoint : IEndpoint
     {
-        public class LogEntry
+        public AutoResetEvent DeliveryStarted = new AutoResetEvent(false);
+
+        public class Delivery
         {
             public TDistributable Distributable;
             public TEndpoint Endpoint;
-            public DateTime StartDateTime;
-            public DateTime EndDateTime;
+            public AsyncAutoResetEvent Continue = new AsyncAutoResetEvent();
+            public bool Complete;
         }
 
-        public List<LogEntry> LogEntries = new List<LogEntry>();
-
-        private readonly TimeSpan _timeSpanToDeliver;
-
-        public FakeLoggedDeliverer(TimeSpan timeSpanToDeliver)
+        public Queue<Delivery> Deliveries = new Queue<Delivery>();
+        
+        public FakeLoggedDeliverer()
         {
-            _timeSpanToDeliver = timeSpanToDeliver;
         }
 
-        public FakeLoggedDeliverer(TimeSpan timeSpanToDeliver, IDictionary<Func<TEndpoint, object>, int> groupingFuncs)
+        public FakeLoggedDeliverer(IDictionary<Func<TEndpoint, object>, int> groupingFuncs)
         {
-            _timeSpanToDeliver = timeSpanToDeliver;
             foreach (var keyValuePair in groupingFuncs)
             {
                 MaximumConcurrentDeliveries(keyValuePair.Key, keyValuePair.Value);
@@ -36,19 +35,46 @@ namespace Delivered.Tests.Fakes
 
         public override async Task DeliverAsync(TDistributable distributable, TEndpoint endpoint)
         {
-            var startTime = DateTime.Now;
-
-            await Task.Delay(_timeSpanToDeliver);
-
-            var endTime = DateTime.Now;
-
-            LogEntries.Add(new LogEntry
+            var delivery = new Delivery
             {
                 Distributable = distributable,
-                Endpoint = endpoint,
-                StartDateTime = startTime,
-                EndDateTime = endTime
-            });
+                Endpoint = endpoint
+            };
+
+            Deliveries.Enqueue(delivery);
+
+            DeliveryStarted.Set();
+
+            await delivery.Continue.WaitAsync();
+
+            delivery.Complete = true;
+        }
+
+        public Delivery WaitForStart()
+        {
+            DeliveryStarted.WaitOne();
+
+            return Deliveries.Dequeue();
+        }
+
+        public Delivery WaitForStart(TimeSpan timeout)
+        {
+            var success = DeliveryStarted.WaitOne(timeout);
+
+            if(!success)
+                throw new TimeoutException();
+
+            return Deliveries.Dequeue();
+        }
+
+        public bool HappensSynchronously()
+        {
+            
+        }
+
+        public bool HappensAsynchronously()
+        {
+
         }
     }
 }
