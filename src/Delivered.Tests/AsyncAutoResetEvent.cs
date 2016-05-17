@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Delivered.Tests
@@ -46,4 +48,47 @@ namespace Delivered.Tests
             waiterToRelease?.SetResult(true);
         }
     }
+
+    public class AsyncAutoResetEvent<TResult>
+    {
+        private readonly Queue<TaskCompletionSource<TResult>> _waiters = new Queue<TaskCompletionSource<TResult>>();
+        private readonly Queue<TResult> _results = new Queue<TResult>();
+
+        public Task<TResult> WaitAsync()
+        {
+            lock (_waiters)
+            {
+                if (_results.Any())
+                {
+                    return Task.FromResult(_results.Dequeue());
+                }
+
+                var waiter = new TaskCompletionSource<TResult>();
+
+                _waiters.Enqueue(waiter);
+
+                return waiter.Task;
+            }
+        }
+
+        public void Set(TResult result)
+        {
+            TaskCompletionSource<TResult> waiterToRelease = null;
+
+            lock (_waiters)
+            {
+                if (_waiters.Any())
+                {
+                    waiterToRelease = _waiters.Dequeue();
+                }
+                else
+                {
+                    _results.Enqueue(result);
+                }
+            }
+
+            waiterToRelease?.SetResult(result);
+        }
+    }
+
 }
