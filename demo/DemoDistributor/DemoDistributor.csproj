@@ -57,13 +57,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Delivered\Delivered.csproj">
+    <ProjectReference Include="..\..\src\Delivered\Delivered.csproj">
       <Project>{1f08b68b-c4df-43a7-bc13-83bcc0afce12}</Project>
       <Name>Delivered</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

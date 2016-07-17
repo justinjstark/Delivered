@@ -3,6 +3,7 @@ Framework "4.6.1"
 properties {
 	$base_dir = resolve-path .
 	$source_dir = "$base_dir\src"
+	$demo_dir = "$base_dir\demo"
 	$tools_dir = "$base_dir\tools"
 	$build_dir = "$base_dir\.build"
 	$result_dir = "$build_dir\result"
@@ -44,7 +45,7 @@ task compile -depends clean {
 
 task compileDemo -depends clean {
 	$nuget = "$tools_dir\nuget\nuget.exe"
-	$solution = "$source_dir\Demo\Demo.sln"
+	$solution = "$demo_dir\Demo.sln"
 
 	Write-Host "Restoring nuget packages"
 	exec {&$nuget restore $solution}

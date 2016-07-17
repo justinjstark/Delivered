@@ -4,7 +4,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoDistributor", "DemoDistributor\DemoDistributor.csproj", "{B3E3EF43-4203-4B56-9816-5BEA5CAE66BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delivered", "..\Delivered\Delivered.csproj", "{1F08B68B-C4DF-43A7-BC13-83BCC0AFCE12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delivered", "..\src\Delivered\Delivered.csproj", "{1F08B68B-C4DF-43A7-BC13-83BCC0AFCE12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
