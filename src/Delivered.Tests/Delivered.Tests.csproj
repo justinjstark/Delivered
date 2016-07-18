@@ -66,12 +66,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncAutoResetEvent.cs" />
+    <Compile Include="Helpers\Concurrency\AsyncAutoResetEvent.cs" />
     <Compile Include="Concurrency\Throttlers\GroupThrottlerTests.cs" />
     <Compile Include="Concurrency\Throttlers\MultipleGroupThrottlerTests.cs" />
     <Compile Include="DelivererTests.cs" />
     <Compile Include="DistributorTests.cs" />
-    <Compile Include="Fakes\FakeLoggedDeliverer.cs" />
+    <Compile Include="Helpers\Fakes\FakeLoggedDeliverer.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

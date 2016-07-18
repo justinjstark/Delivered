@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Delivered.Tests.Helpers.Concurrency;
 
-namespace Delivered.Tests.Fakes
+namespace Delivered.Tests.Helpers.Fakes
 {
     public interface IControllable
     {
@@ -39,7 +40,7 @@ namespace Delivered.Tests.Fakes
             //Run func2 to completion
             var process2 = WaitForStart(func2);
             process2.Continue.Set();
-            var success = process2.Task.Wait(new TimeSpan(0, 0, 0, 0, 200));
+            var success = process2.Task.Wait(new TimeSpan(0, 0, 0, 0, 1000));
 
             return success;
         }
@@ -48,7 +49,7 @@ namespace Delivered.Tests.Fakes
         {
             WaitForStart(func1);
 
-            var success = WaitForStart(func2, new TimeSpan(0, 0, 0, 0, 200));
+            var success = WaitForStart(func2, new TimeSpan(0, 0, 0, 0, 500));
 
             return !success;
         }
