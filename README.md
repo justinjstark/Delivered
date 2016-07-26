@@ -10,7 +10,7 @@ Delivered is designed to coordinate the delivery of files or other custom distri
 
 ## Demo
 
-A simple demo is available in [/demo/](https://github.com/justinjstark/Delivered/tree/master/Demo).
+A simple demo is available in [/demo/](https://github.com/justinjstark/Delivered/tree/master/demo).
 
 ## Setup
 
