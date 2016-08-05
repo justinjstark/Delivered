@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Delivered
 {
-    public class Distributor<TDistributable, TRecipient> : IDistributor<TDistributable, TRecipient>
+    public class Distributor<TDistributable, TRecipient> : IDistributor<TDistributable, TRecipient>, IDisposable
         where TDistributable : IDistributable
         where TRecipient : IRecipient
     {
@@ -97,6 +97,25 @@ namespace Delivered
             {
                 _semaphore?.Release();
             }
+        }
+
+        protected virtual void Dispose(bool itIsSafeToAlsoFreeManagedObjects)
+        {
+            if (_semaphore != null)
+            {
+                _semaphore.Dispose();
+                _semaphore = null;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        ~Distributor()
+        {
+            Dispose(false);
         }
     }
 }
