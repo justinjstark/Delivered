@@ -22,9 +22,8 @@ namespace Delivered.Tests
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
-            var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
-
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>(cfg => cfg.RegisterEndpointRepository(endpointRepository.Object));
+            
             Should.ThrowAsync<InvalidOperationException>(distributor.DistributeAsync(distributable, recipient));
         }
 
@@ -40,9 +39,11 @@ namespace Delivered.Tests
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new [] { endpoint });
 
-            var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.RegisterDeliverer(deliverer.Object);
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>(cfg =>
+            {
+                cfg.RegisterEndpointRepository(endpointRepository.Object);
+                cfg.RegisterDeliverer(deliverer.Object);
+            });
             
             distributor.DistributeAsync(distributable, recipient).Wait();
 
@@ -62,10 +63,12 @@ namespace Delivered.Tests
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
-            var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.RegisterDeliverer(deliverer1.Object);
-            distributor.RegisterDeliverer(deliverer2.Object);
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>(cfg =>
+            {
+                cfg.RegisterEndpointRepository(endpointRepository.Object);
+                cfg.RegisterDeliverer(deliverer1.Object);
+                cfg.RegisterDeliverer(deliverer2.Object);
+            });
 
             distributor.DistributeAsync(distributable, recipient).Wait();
 
@@ -85,10 +88,12 @@ namespace Delivered.Tests
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
-            var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.RegisterDeliverer(deliverer1.Object);
-            distributor.RegisterDeliverer(deliverer2.Object);
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>(cfg =>
+            {
+                cfg.RegisterEndpointRepository(endpointRepository.Object);
+                cfg.RegisterDeliverer(deliverer1.Object);
+                cfg.RegisterDeliverer(deliverer2.Object);
+            });
 
             distributor.DistributeAsync(distributable, recipient).Wait();
             
@@ -103,16 +108,17 @@ namespace Delivered.Tests
             var recipient = new FakeRecipient();
             var endpoint = new FakeEndpoint();
 
-            var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-
             var deliverer = new FakeLoggedDeliverer<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
 
             var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
-            distributor.RegisterDeliverer(deliverer);
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>(cfg =>
+            {
+                cfg.RegisterDeliverer(deliverer);
+                cfg.RegisterEndpointRepository(endpointRepository.Object);
+            });
 
             var task1 = distributor.DistributeAsync(distributable1, recipient);
             var task2 = distributor.DistributeAsync(distributable2, recipient);
@@ -133,17 +139,18 @@ namespace Delivered.Tests
             var recipient = new FakeRecipient();
             var endpoint = new FakeEndpoint();
 
-            var distributor = new Distributor<FakeDistributable, FakeRecipient>();
-
             var deliverer = new FakeLoggedDeliverer<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
 
             var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
                 .Returns(new[] { endpoint });
 
-            distributor.RegisterDeliverer(deliverer);
-            distributor.RegisterEndpointRepository(endpointRepository.Object);
-            distributor.MaximumConcurrentDeliveries(1);
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>(cfg =>
+            {
+                cfg.RegisterEndpointRepository(endpointRepository.Object);
+                cfg.RegisterDeliverer(deliverer);
+                cfg.MaximumConcurrentDeliveries(1);
+            });
 
             var task1 = distributor.DistributeAsync(distributable1, recipient);
             var task2 = distributor.DistributeAsync(distributable2, recipient);
