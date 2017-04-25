@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Delivered.Tests.Fakes;
 using Moq;
+using Nito.AsyncEx;
 using NUnit.Framework;
 using Shouldly;
 
@@ -108,7 +112,7 @@ namespace Delivered.Tests
             var recipient = new FakeRecipient();
             var endpoint = new FakeEndpoint();
 
-            var deliverer = new FakeLoggedDeliverer<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
+            var deliverer = new FakeControlledDeliverer();
 
             var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
@@ -120,15 +124,16 @@ namespace Delivered.Tests
                 cfg.RegisterEndpointRepository(endpointRepository.Object);
             });
 
-            var task1 = distributor.DistributeAsync(distributable1, recipient);
-            var task2 = distributor.DistributeAsync(distributable2, recipient);
+            var task1Controller = deliverer.GetController(distributable1, endpoint);
+            var task2Controller = deliverer.GetController(distributable2, endpoint);
 
-            Task.WaitAll(task1, task2);
+#pragma warning disable 4014
+            distributor.DistributeAsync(distributable1, recipient);
+            distributor.DistributeAsync(distributable2, recipient);
+#pragma warning restore 4014
 
-            var lastStartTime = deliverer.LogEntries.Max(e => e.StartDateTime);
-            var firstEndTime = deliverer.LogEntries.Min(e => e.EndDateTime);
-
-            lastStartTime.ShouldBeLessThan(firstEndTime);
+            //Both tasks should start simultaneously
+            Task.WaitAll(task1Controller.UntilHasStartedAsync(), task2Controller.UntilHasStartedAsync());
         }
 
         [Test]
@@ -139,7 +144,7 @@ namespace Delivered.Tests
             var recipient = new FakeRecipient();
             var endpoint = new FakeEndpoint();
 
-            var deliverer = new FakeLoggedDeliverer<FakeDistributable, FakeEndpoint>(new TimeSpan(0, 0, 0, 0, 100));
+            var deliverer = new FakeControlledDeliverer();
 
             var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
             endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
@@ -152,15 +157,24 @@ namespace Delivered.Tests
                 cfg.MaximumConcurrentDeliveries(1);
             });
 
-            var task1 = distributor.DistributeAsync(distributable1, recipient);
-            var task2 = distributor.DistributeAsync(distributable2, recipient);
+            var task1Controller = deliverer.GetController(distributable1, endpoint);
+            var task2Controller = deliverer.GetController(distributable2, endpoint);
 
-            Task.WaitAll(task1, task2);
+            //Start task1
+#pragma warning disable 4014
+            distributor.DistributeAsync(distributable1, recipient);
+#pragma warning restore 4014
 
-            var lastStartTime = deliverer.LogEntries.Max(e => e.StartDateTime);
-            var firstEndTime = deliverer.LogEntries.Min(e => e.EndDateTime);
+            //Wait until task1 has started
+            Task.WaitAny(task1Controller.UntilHasStartedAsync(), task2Controller.UntilHasStartedAsync());
 
-            lastStartTime.ShouldBeGreaterThanOrEqualTo(firstEndTime);
+            //Start task2
+#pragma warning disable 4014
+            distributor.DistributeAsync(distributable2, recipient);
+#pragma warning restore 4014
+
+            //Wait 2 seconds for task 2 to start
+            task2Controller.UntilIsEndingAsync().Wait(2*1000).ShouldBe(false);
         }
 
         [Test]
@@ -198,7 +212,82 @@ namespace Delivered.Tests
         {
             public override async Task DeliverAsync(FakeDistributable distributable, FakeEndpoint endpoint)
             {
+                await Task.Run(() => { });
+
                 throw new Exception();
+            }
+        }
+
+        public class FakeControlledDeliverer : Deliverer<FakeDistributable, FakeEndpoint>
+        {
+            public class Controller
+            {
+                public bool HasStarted { get; private set; }
+                public bool IsEnding { get; private set; }
+
+                private readonly AsyncAutoResetEvent _hasStartedEvent = new AsyncAutoResetEvent();
+                private readonly AsyncAutoResetEvent _continueEvent = new AsyncAutoResetEvent();
+                private readonly AsyncAutoResetEvent _isEndingEvent = new AsyncAutoResetEvent();
+                
+                public async Task UntilHasStartedAsync()
+                {
+                    await _hasStartedEvent.WaitAsync();
+                }
+
+                public async Task UntilContinued()
+                {
+                    await _continueEvent.WaitAsync();
+                }
+
+                public async Task UntilIsEndingAsync()
+                {
+                    await _isEndingEvent.WaitAsync();
+                }
+
+                public void Continue()
+                {
+                    _continueEvent.Set();
+                }
+
+                public void MarkStarted()
+                {
+                    HasStarted = true;
+                    _hasStartedEvent.Set();
+                }
+
+                public void MarkEnding()
+                {
+                    IsEnding = true;
+                    _isEndingEvent.Set();
+                }
+            }
+
+            private readonly IDictionary<dynamic, Controller> _controllers = new Dictionary<dynamic, Controller>();
+            
+            public Controller GetController(FakeDistributable distributable, FakeEndpoint endpoint)
+            {
+                var key = new { Distributable = distributable, Endpoint = endpoint };
+
+                Controller controller;
+                _controllers.TryGetValue(key, out controller);
+
+                if (controller != null) return controller;
+
+                controller = new Controller();
+                _controllers.Add(key, controller);
+
+                return controller;
+            }
+
+            public override async Task DeliverAsync(FakeDistributable distributable, FakeEndpoint endpoint)
+            {
+                var controller = GetController(distributable, endpoint);
+
+                controller.MarkStarted();
+
+                await controller.UntilContinued();
+
+                controller.MarkEnding();
             }
         }
 

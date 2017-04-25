@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Delivered.Tests.Fakes;
 using NUnit.Framework;
-using Shouldly;
 
 namespace Delivered.Tests
 {
