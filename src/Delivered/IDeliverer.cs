@@ -4,7 +4,7 @@ namespace Delivered
 {
     public interface IDeliverer
     {
-        Task DeliverAsync(IDistributable disributable, IEndpoint endpoint);
+        Task DeliverAsync(IDistributable distributable, IEndpoint endpoint);
     }
 
     public interface IDeliverer<in TDistributable, in TEndpoint> : IDeliverer

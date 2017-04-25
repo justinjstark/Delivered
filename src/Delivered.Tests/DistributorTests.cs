@@ -163,7 +163,44 @@ namespace Delivered.Tests
             lastStartTime.ShouldBeGreaterThanOrEqualTo(firstEndTime);
         }
 
+        [Test]
+        public void DistributeAsync_ReturnsAllExceptions()
+        {
+            var distributable = new FakeDistributable();
+            var recipient = new FakeRecipient();
+            var endpoint1 = new FakeEndpoint();
+            var endpoint2 = new FakeEndpoint();
+            var endpoint3 = new FakeEndpoint();
+
+            var deliverer = new ExceptionThrowingDeliverer();
+
+            var endpointRepository = new Mock<IEndpointRepository<FakeRecipient>>();
+            endpointRepository.Setup(e => e.GetEndpointsForRecipient(recipient))
+                .Returns(new[] { endpoint1, endpoint2, endpoint3 });
+
+            var distributor = new Distributor<FakeDistributable, FakeRecipient>(cfg =>
+            {
+                cfg.RegisterEndpointRepository(endpointRepository.Object);
+                cfg.RegisterDeliverer(deliverer);
+                cfg.MaximumConcurrentDeliveries(1);
+            });
+
+            Should.ThrowAsync<AggregateException>(async () => await distributor.DistributeAsync(distributable, recipient))
+                .Result
+                .InnerExceptions
+                .Count
+                .ShouldBe(3);
+        }
+
         #region "Fakes"
+
+        public class ExceptionThrowingDeliverer : Deliverer<FakeDistributable, FakeEndpoint>
+        {
+            public override async Task DeliverAsync(FakeDistributable distributable, FakeEndpoint endpoint)
+            {
+                throw new Exception();
+            }
+        }
 
         public class FakeDistributable : IDistributable
         {
