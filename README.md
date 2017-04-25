@@ -86,7 +86,12 @@ Delivered offers throttling functionality. There are two places where the maximu
 **1. Distributor Throttling**
 
 ```C#
-distributor.MaximumConcurrentDeliveries(3)
+var distributor = new Distributor<File, Vendor>(cfg =>
+{
+    cfg.RegisterEndpointRepository(new FtpEndpointRepository());
+    cfg.RegisterDeliverer(new FtpDeliverer());
+    cfg.MaximumConcurrentDeliveries = 3;
+});
 distributor.DistributeAsync(someFile, someVendor).Wait();
 ```
 
