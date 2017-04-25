@@ -62,9 +62,11 @@ public class FtpDeliverer : IDeliverer<File, FtpEndpoint>
 **4. Register the repository and deliverer with the distributor and run the distributor**
 
 ```C#
-var distributor = new Distributor<File, Vendor>();
-distributor.RegisterEndpointRepository(new FtpEndpointRepository());
-distributor.RegisterDeliverer(new FtpDeliverer());
+var distributor = new Distributor<File, Vendor>(cfg =>
+{
+    cfg.RegisterEndpointRepository(new FtpEndpointRepository());
+    cfg.RegisterDeliverer(new FtpDeliverer());
+});
 
 distributor.DistributeAsync(someFile, someVendor).Wait();
 ```

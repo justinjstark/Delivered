@@ -10,12 +10,14 @@ namespace DemoDistributor
         private static void Main(string[] args)
         {
             //Configure the distributor
-            var distributor = new Distributor<File, Vendor>();
-            distributor.RegisterEndpointRepository(new FileSystemEndpointRepository());
-            distributor.RegisterEndpointRepository(new SharepointEndpointRepository());
-            distributor.RegisterDeliverer(new FileSystemDeliverer());
-            distributor.RegisterDeliverer(new SharepointDeliverer());
-            distributor.MaximumConcurrentDeliveries(3);
+            var distributor = new Distributor<File, Vendor>(cfg =>
+            {
+                cfg.RegisterEndpointRepository(new FileSystemEndpointRepository());
+                cfg.RegisterEndpointRepository(new SharepointEndpointRepository());
+                cfg.RegisterDeliverer(new FileSystemDeliverer());
+                cfg.RegisterDeliverer(new SharepointDeliverer());
+                cfg.MaximumConcurrentDeliveries(3);
+            });
             
             //Distribute a file to a vendor
             try

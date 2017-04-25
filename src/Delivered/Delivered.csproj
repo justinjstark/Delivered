@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.cs" />
     <Compile Include="Distributor.cs" />
     <Compile Include="Deliverer.cs" />
     <Compile Include="IDistributable.cs" />
