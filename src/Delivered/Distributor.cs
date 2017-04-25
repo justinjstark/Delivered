@@ -38,21 +38,16 @@ namespace Delivered
                 }
             }
 
-            //Wait for all deliveries to complete
-            var task = Task.WhenAll(deliveryTasks);
-
-            //This try-catch forces all deliveries to finish before an aggregate exception is thrown.
             try
             {
-                await task;
+                await Task.WhenAll(deliveryTasks);
             }
             catch
             {
-                if (task.Exception != null)
-                {
-                    throw task.Exception;
-                }
-                throw;
+                //WhenAll only throws the first exception
+                //WaitAll will throw an AggregateException
+                //This is a simple way to throw the AggregateException since all tasks are already complete
+                Task.WaitAll(deliveryTasks.ToArray());
             }
         }
 
